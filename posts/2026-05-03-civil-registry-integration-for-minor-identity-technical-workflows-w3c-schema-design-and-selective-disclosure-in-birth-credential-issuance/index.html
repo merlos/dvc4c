@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-05-03">
+<meta name="description" content="Technical guide to issuing W3C Verifiable Credentials for minor birth records. Covers JSON-LD schema design, selective disclosure, and privacy.">
+
+<title>Civil Registry Integration for Minor Identity: Technical Workflows, W3C Schema Design, and Selective Disclosure in Birth Credential Issuance – Digital Verifiable Credentials for Children</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-4897d45d2f75ed4f519693be625836c5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Digital Verifiable Credentials for Children</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#w3c-schema-design-for-birth-records" id="toc-w3c-schema-design-for-birth-records" class="nav-link active" data-scroll-target="#w3c-schema-design-for-birth-records">W3C Schema Design for Birth Records</a>
+  <ul class="collapse">
+  <li><a href="#context-and-property-definition" id="toc-context-and-property-definition" class="nav-link" data-scroll-target="#context-and-property-definition">Context and Property Definition</a></li>
+  <li><a href="#schema-validation-strategies" id="toc-schema-validation-strategies" class="nav-link" data-scroll-target="#schema-validation-strategies">Schema Validation Strategies</a></li>
+  </ul></li>
+  <li><a href="#secure-issuance-workflows-for-minors" id="toc-secure-issuance-workflows-for-minors" class="nav-link" data-scroll-target="#secure-issuance-workflows-for-minors">Secure Issuance Workflows for Minors</a>
+  <ul class="collapse">
+  <li><a href="#workflow-architecture" id="toc-workflow-architecture" class="nav-link" data-scroll-target="#workflow-architecture">Workflow Architecture</a></li>
+  <li><a href="#custody-and-key-management" id="toc-custody-and-key-management" class="nav-link" data-scroll-target="#custody-and-key-management">Custody and Key Management</a></li>
+  </ul></li>
+  <li><a href="#selective-disclosure-and-data-minimization" id="toc-selective-disclosure-and-data-minimization" class="nav-link" data-scroll-target="#selective-disclosure-and-data-minimization">Selective Disclosure and Data Minimization</a>
+  <ul class="collapse">
+  <li><a href="#proof-mechanisms" id="toc-proof-mechanisms" class="nav-link" data-scroll-target="#proof-mechanisms">Proof Mechanisms</a></li>
+  <li><a href="#implementation-example" id="toc-implementation-example" class="nav-link" data-scroll-target="#implementation-example">Implementation Example</a></li>
+  </ul></li>
+  <li><a href="#interoperability-and-verification-services" id="toc-interoperability-and-verification-services" class="nav-link" data-scroll-target="#interoperability-and-verification-services">Interoperability and Verification Services</a>
+  <ul class="collapse">
+  <li><a href="#revocation-management" id="toc-revocation-management" class="nav-link" data-scroll-target="#revocation-management">Revocation Management</a></li>
+  <li><a href="#cross-jurisdiction-trust" id="toc-cross-jurisdiction-trust" class="nav-link" data-scroll-target="#cross-jurisdiction-trust">Cross-Jurisdiction Trust</a></li>
+  </ul></li>
+  <li><a href="#summary-and-actionable-takeaways" id="toc-summary-and-actionable-takeaways" class="nav-link" data-scroll-target="#summary-and-actionable-takeaways">Summary and Actionable Takeaways</a>
+  <ul class="collapse">
+  <li><a href="#next-steps-for-implementation" id="toc-next-steps-for-implementation" class="nav-link" data-scroll-target="#next-steps-for-implementation">Next Steps for Implementation</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Civil Registry Integration for Minor Identity: Technical Workflows, W3C Schema Design, and Selective Disclosure in Birth Credential Issuance</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Digital Identity</div>
+    <div class="quarto-category">Government Technology</div>
+    <div class="quarto-category">W3C Standards</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Technical guide to issuing W3C Verifiable Credentials for minor birth records. Covers JSON-LD schema design, selective disclosure, and privacy.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ian Merlos </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 3, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Civil registries handling minor identity data run into a pretty specific engineering headache: you need to prove a kid’s status without handing them direct control over private info or leaking full records to random third parties. Switching to <strong>W3C Verifiable Credentials for civil registry</strong> systems actually solves this. Instead of leaning on centralized database queries, you’re moving toward decentralized, privacy-preserving issuance. This guide walks through the architecture for <strong>birth credential issuance workflows</strong>. We’ll cover the <strong>JSON-LD schema for birth records</strong>, how cryptographic signing actually works under the hood, and <strong>selective disclosure for minor identity</strong> so you can keep data minimal and stay compliant.</p>
+<section id="w3c-schema-design-for-birth-records" class="level2">
+<h2 class="anchored" data-anchor-id="w3c-schema-design-for-birth-records">W3C Schema Design for Birth Records</h2>
+<p>Getting your schema modeling right comes down to a balancing act: you need standardization, but civil documentation has its own quirky semantic requirements. The W3C Verifiable Credentials Data Model v2.0 gives you a solid starting point, but registries will almost always need to extend it with precise property definitions. Why? So your downstream verification logic doesn’t trip over ambiguous fields.</p>
+<section id="context-and-property-definition" class="level3">
+<h3 class="anchored" data-anchor-id="context-and-property-definition">Context and Property Definition</h3>
+<p>First things first: your JSON-LD context needs to point to stable, versioned URIs. For birth records, it’s usually best to either extend <code>schema.org</code> or carve out a registry-specific context. Either way, you’re aiming for long-term interoperability. And please, keep your properties strongly typed. It saves you a world of hurt when verification time comes around.</p>
+<p>Below is a reference implementation of a <strong>JSON-LD schema for birth records</strong> using VC v2.0 structures. Take a look at how we’re nesting objects for complex bits like location, and notice how the credential subject is cleanly separated from the metadata.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"@context"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://www.w3.org/ns/credentials/v2"</span><span class="ot">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://w3c-ccg.github.io/vc-jose-cose/vc/jose/contexts/v1"</span><span class="ot">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"BirthRecord"</span><span class="fu">:</span> <span class="st">"https://w3c-ccg.github.io/vc-jose-cose/vc/jose/contexts/v1#BirthRecord"</span><span class="fu">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"birthDate"</span><span class="fu">:</span> <span class="st">"https://schema.org/birthDate"</span><span class="fu">,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"birthPlace"</span><span class="fu">:</span> <span class="st">"https://schema.org/birthPlace"</span><span class="fu">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"civilRegistryNumber"</span><span class="fu">:</span> <span class="st">"https://w3id.org/security/v2#registryId"</span><span class="fu">,</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"guardian"</span><span class="fu">:</span> <span class="st">"https://schema.org/legalName"</span><span class="fu">,</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"minorStatus"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"@id"</span><span class="fu">:</span> <span class="st">"https://w3id.org/security/v2#minorStatus"</span><span class="fu">,</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"@type"</span><span class="fu">:</span> <span class="st">"https://schema.org/Boolean"</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"type"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"VerifiableCredential"</span><span class="ot">,</span> <span class="st">"BirthRecord"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"issuer"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"did:example:civil-registry:eu-fr-77"</span><span class="fu">,</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"Regional Civil Registry Authority"</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"issuanceDate"</span><span class="fu">:</span> <span class="st">"2024-05-15T09:30:00Z"</span><span class="fu">,</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"credentialSubject"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"did:example:minor:98765"</span><span class="fu">,</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"birthDate"</span><span class="fu">:</span> <span class="st">"2020-11-02"</span><span class="fu">,</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"civilRegistryNumber"</span><span class="fu">:</span> <span class="st">"FR-77-2020-998877"</span><span class="fu">,</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"birthPlace"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"@type"</span><span class="fu">:</span> <span class="st">"Place"</span><span class="fu">,</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"address"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"@type"</span><span class="fu">:</span> <span class="st">"PostalAddress"</span><span class="fu">,</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"addressLocality"</span><span class="fu">:</span> <span class="st">"Paris"</span><span class="fu">,</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"addressCountry"</span><span class="fu">:</span> <span class="st">"FR"</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"minorStatus"</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"credentialStatus"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"https://registry.example.org/status/98765#1"</span><span class="fu">,</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"BitstringStatusList2021"</span><span class="fu">,</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"statusPurpose"</span><span class="fu">:</span> <span class="st">"revocation"</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="schema-validation-strategies" class="level3">
+<h3 class="anchored" data-anchor-id="schema-validation-strategies">Schema Validation Strategies</h3>
+<p>You really want to run schema validation right at the issuance boundary. Tossing this into JSON Schema or SHACL shapes means malformed credentials get rejected before they’re ever signed. For instance, <code>birthDate</code> should strictly follow ISO 8601, and <code>civilRegistryNumber</code> needs to match whatever deterministic pattern your jurisdiction uses. It’s a small step, but it keeps credential pollution out of the system and shrinks the attack surface for whoever’s verifying these down the line.</p>
+</section>
+</section>
+<section id="secure-issuance-workflows-for-minors" class="level2">
+<h2 class="anchored" data-anchor-id="secure-issuance-workflows-for-minors">Secure Issuance Workflows for Minors</h2>
+<p>The <strong>birth credential issuance workflow</strong> looks pretty different when you’re dealing with kids. Consent models and custody rules completely change the game. Minors can’t legally hold private keys on their own, so your workflow has to account for guardian custody—or state-held custodial wallets—until they hit the age of majority.</p>
+<section id="workflow-architecture" class="level3">
+<h3 class="anchored" data-anchor-id="workflow-architecture">Workflow Architecture</h3>
+<p>A solid issuance pipeline really breaks down into four atomic steps:</p>
+<ol type="1">
+<li><strong>Source Attestation:</strong> Your registry system checks the source doc (hospital declaration, parental IDs, etc.) against internal records. This step hashes the source data, effectively anchoring the credential to immutable evidence.</li>
+<li><strong>DID Resolution and Association:</strong> The system looks up the minor’s DID. If they don’t have one yet, the registry mints a key pair and publishes a DID Document. Here’s the catch: verification method keys for minors should live in a multi-sig setup or a guardian-controlled wallet. You’ll also want rotation policies ready to trigger once they turn 18.</li>
+<li><strong>Credential Formation and Signing:</strong> Time to build the VC payload. Stick to asymmetric cryptography for signing. Ed25519 is usually the go-to for speed and compactness, though BLS12-381 might be worth it if you’re doing bulk processing and need aggregate verification.</li>
+<li><strong>Secure Delivery:</strong> You’ll send the credentials to a holder wallet over a secure channel. QR codes packed with <code>openid4vci</code> or <code>didcomm</code> messages are pretty standard here. Just make sure the delivery payload includes a session token—replay attacks are no joke during transfer.</li>
+</ol>
+<blockquote class="blockquote">
+<p><strong>Diagram Description:</strong> A flow diagram illustrating the issuance process shows the Civil Registry Server connecting to a Validation Engine. Upon success, data flows to the VC Issuance Module, which signs the payload using the Registry’s Private Key. The signed credential is then pushed via a secure WebSocket or HTTP POST to the Guardian’s Mobile Wallet, which stores the credential in an encrypted keystore. A status update is simultaneously written to the Bitstring Revocation List.</p>
+</blockquote>
+</section>
+<section id="custody-and-key-management" class="level3">
+<h3 class="anchored" data-anchor-id="custody-and-key-management">Custody and Key Management</h3>
+<p>When it comes to key management for minors, you’re looking at a full lifecycle approach. The trick is to bake a <code>keyRotation</code> policy directly into the DID Document. Set it up so control automatically shifts from guardian keys to minor-controlled keys once a specific timestamp is hit. That way, the credential stays valid without you having to manually re-issue it, keeping everything smooth as they transition into adulthood.</p>
+</section>
+</section>
+<section id="selective-disclosure-and-data-minimization" class="level2">
+<h2 class="anchored" data-anchor-id="selective-disclosure-and-data-minimization">Selective Disclosure and Data Minimization</h2>
+<p>Let’s be honest: privacy preservation is the whole reason VCs are so useful. <strong>Selective disclosure for minor identity</strong> lets the holder show exactly what’s needed for a specific verification request—and nothing more. It’s a massive win for reducing data leakage.</p>
+<section id="proof-mechanisms" class="level3">
+<h3 class="anchored" data-anchor-id="proof-mechanisms">Proof Mechanisms</h3>
+<p>You can pull this off using standard BBS+ signatures or SD-JWT (Selective Disclosure JWT). Unlike RSA or ECDSA, which basically force you to hand over the whole credential, these schemes let the holder generate a proof that certain claims exist without actually spilling the values or exposing unrelated data.</p>
+<ul>
+<li><strong>BBS+ Signatures:</strong> These handle non-interactive subset proofs really well. A guardian can prove the kid is a citizen without flashing the birth date or registry number.</li>
+<li><strong>Zero-Knowledge Proofs (ZKPs):</strong> If you’re dealing with sensitive thresholds, ZKPs let you prove a condition without revealing the raw data underneath. Say a verifier needs to confirm <code>birthDate &lt; 2016-01-01</code> (to prove the child is under 8). ZKPs handle that without ever exposing the exact date.</li>
+</ul>
+</section>
+<section id="implementation-example" class="level3">
+<h3 class="anchored" data-anchor-id="implementation-example">Implementation Example</h3>
+<p>When you’re designing the presentation definition for a service provider—like a school enrollment system—the registry or wallet should support a presentation exchange that asks only for what’s strictly necessary:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"school-enrollment-request"</span><span class="fu">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"https://identity.foundation/presentation-exchange/submission-description"</span><span class="fu">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"input_descriptors"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"minor_birth_proof"</span><span class="fu">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"constraints"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"fields"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>          <span class="fu">{</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"path"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"$.type"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"filter"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span> <span class="dt">"pattern"</span><span class="fu">:</span> <span class="st">"BirthRecord"</span> <span class="fu">}</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>          <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>          <span class="fu">{</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"path"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"$.birthDate"</span><span class="ot">]</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>          <span class="fu">}</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In a setup like this, the wallet will happily disclose <code>birthDate</code> but keep <code>civilRegistryNumber</code> and <code>birthPlace</code> under wraps. It lines up perfectly with GDPR’s data minimization rules, making sure third parties only get what they actually need for the transaction.</p>
+</section>
+</section>
+<section id="interoperability-and-verification-services" class="level2">
+<h2 class="anchored" data-anchor-id="interoperability-and-verification-services">Interoperability and Verification Services</h2>
+<p>Of course, civil registry credentials are only as good as their ability to travel. Verifiers across different systems need to validate the cryptographic signature, check revocation status, and resolve the issuer’s DID without breaking a sweat.</p>
+<section id="revocation-management" class="level3">
+<h3 class="anchored" data-anchor-id="revocation-management">Revocation Management</h3>
+<p>Registries absolutely have to support full credential lifecycle management. That <code>credentialStatus</code> field in your schema? It should point straight to a revocation list. Bitstring Status List 2021 is fantastic for high-volume registries. It lets verifiers grab a compressed list and check a single bit index to see if a credential is still good. It’s a much cleaner approach than individual OCSP checks, which tend to add latency and accidentally leak query patterns back to the issuer.</p>
+</section>
+<section id="cross-jurisdiction-trust" class="level3">
+<h3 class="anchored" data-anchor-id="cross-jurisdiction-trust">Cross-Jurisdiction Trust</h3>
+<p>If you want real interoperability, registries should publish their DID Documents using decentralized identifiers that actually resolve globally. Trust registries or decentralized web nodes can cache issuer public keys, which really cuts down on resolution lag. On top of that, building <code>VerifiablePresentation</code> validation logic that specifically checks for the <code>minorStatus</code> flag lets automated systems apply age-appropriate handling rules on the fly. No manual oversight needed.</p>
+</section>
+</section>
+<section id="summary-and-actionable-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="summary-and-actionable-takeaways">Summary and Actionable Takeaways</h2>
+<p>Slipping W3C VCs into civil registry infrastructure isn’t a plug-and-play deal. It demands careful schema design, bulletproof custody models, and solid selective disclosure mechanics. The table below breaks down the core technical choices you’ll be making:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Component</th>
+<th style="text-align: left;">Recommended Technology</th>
+<th style="text-align: left;">Implementation Benefit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Schema Version</strong></td>
+<td style="text-align: left;">W3C VC v2.0</td>
+<td style="text-align: left;">Native support for multiple subjects and enhanced extensibility.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Signature Scheme</strong></td>
+<td style="text-align: left;">BBS+ or Ed25519</td>
+<td style="text-align: left;">BBS+ enables selective disclosure; Ed25519 offers high performance.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Revocation</strong></td>
+<td style="text-align: left;">Bitstring Status List</td>
+<td style="text-align: left;">Scalable, privacy-preserving status checks for large populations.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Selective Disclosure</strong></td>
+<td style="text-align: left;">SD-JWT or ZKP Proofs</td>
+<td style="text-align: left;">Allows proof of attributes (e.g., age range) without revealing raw data.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Delivery</strong></td>
+<td style="text-align: left;">OpenID4VCI / DIDComm</td>
+<td style="text-align: left;">Standardized, secure protocols for credential transfer to wallets.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Key Custody</strong></td>
+<td style="text-align: left;">Multi-sig / Time-locked Rotation</td>
+<td style="text-align: left;">Ensures guardian control during minority with automatic transfer at adulthood.</td>
+</tr>
+</tbody>
+</table>
+<section id="next-steps-for-implementation" class="level3">
+<h3 class="anchored" data-anchor-id="next-steps-for-implementation">Next Steps for Implementation</h3>
+<ol type="1">
+<li><strong>Define Context URIs:</strong> Get those versioned JSON-LD contexts for birth records published. Pin them to a decentralized storage solution or a rock-solid HTTP endpoint.</li>
+<li><strong>Prototype Selective Disclosure:</strong> Spin up a sandbox and test BBS+ proof generation. You’ll want to see how the performance overhead stacks up against standard signatures before going live.</li>
+<li><strong>Audit Custody Policies:</strong> Take a hard look at your key management infrastructure. Make sure automated rotation for minor DIDs is actually wired up and ready to go.</li>
+<li><strong>Validate Downstream Integrations:</strong> Run interoperability tests with your target verifiers (schools, healthcare systems, etc.). You want to make sure those presentation exchanges resolve cleanly in the real world.</li>
+</ol>
+<p>Stick to these workflows, and you’ll have <strong>W3C Verifiable Credentials for civil registry</strong> operations that are secure, privacy-focused, and genuinely interoperable. It’s a solid foundation for <strong>birth credential issuance workflows</strong> that could easily set the standard elsewhere.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/merlos\.github\.io\/dvc4c\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

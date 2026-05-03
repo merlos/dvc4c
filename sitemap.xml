@@ -2,14 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://merlos.github.io/dvc4c/index.html</loc>
-    <lastmod>2026-05-03T04:03:35.603Z</lastmod>
+    <lastmod>2026-05-03T06:49:18.425Z</lastmod>
   </url>
   <url>
     <loc>https://merlos.github.io/dvc4c/posts/2026-05-03-bootstrapping-trust-technical-foundations-and-architectural-patterns-for-digital-verifiable-credentials-in-minor-centric-ecosystems/index.html</loc>
-    <lastmod>2026-05-03T04:03:35.604Z</lastmod>
+    <lastmod>2026-05-03T06:49:18.426Z</lastmod>
+  </url>
+  <url>
+    <loc>https://merlos.github.io/dvc4c/posts/2026-05-03-civil-registry-integration-for-minor-identity-technical-workflows-w3c-schema-design-and-selective-disclosure-in-birth-credential-issuance/index.html</loc>
+    <lastmod>2026-05-03T06:49:18.426Z</lastmod>
   </url>
   <url>
     <loc>https://merlos.github.io/dvc4c/about.html</loc>
-    <lastmod>2026-05-03T04:03:35.603Z</lastmod>
+    <lastmod>2026-05-03T06:49:18.425Z</lastmod>
   </url>
 </urlset>
