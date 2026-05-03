@@ -1,0 +1,7 @@
+---
+title: "About"
+---
+
+Welcome to **Digital Verifiable Credentials for Children**.
+
+this blog explores the use of digital verifiable credentials during the child journey from pre-natal to the time he incorporates to the job market from the government admninistrtive point. It explores the journey from the different government sectors (health, education, social policy, birth registration), it evaluates elements of interoperability (from the 4 layers: technical, semantic, organizational and policy) and promotes open standards and open source solutions. It provides not only a technical overview but also a human rights perspective, promoting data privacy, data security and cybersecurity. 
