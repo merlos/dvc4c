@@ -42,7 +42,7 @@ if [[ -f "$BLOG_DIR/.env" ]]; then
 fi
 
 # Generate the post
-bloggerai post generate --blog-dir "$BLOG_DIR" $DRY_RUN
+bloggerai -v post generate --blog-dir "$BLOG_DIR" $DRY_RUN
 
 if [[ -n "$DRY_RUN" ]]; then
   echo "[publish] dry-run complete — skipping git commit/push"
