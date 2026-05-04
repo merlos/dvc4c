@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/2026-05-04-architecting-the-minor-centric-dvc-ecosystem-a-technical-survey-of-standards-privacy-mechanisms-and-governance-frameworks/index.html",
       "/posts/2026-05-03-civil-registry-integration-for-minor-identity-technical-workflows-w3c-schema-design-and-selective-disclosure-in-birth-credential-issuance/index.html",
       "/posts/2026-05-03-centralized-dvc-implementation-for-degree-attestation-technical-strategies-for-high-volume-issuance-revocation-management-and-verification-endpoints/index.html",
       "/posts/2026-05-03-bootstrapping-trust-technical-foundations-and-architectural-patterns-for-digital-verifiable-credentials-in-minor-centric-ecosystems/index.html"
