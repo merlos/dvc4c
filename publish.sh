@@ -42,7 +42,7 @@ if [[ -f "$BLOG_DIR/.env" ]]; then
 fi
 
 # Generate the post
-bloggerai -v post generate --blog-dir "$BLOG_DIR" $DRY_RUN
+bloggerai post generate --blog-dir "$BLOG_DIR" $DRY_RUN
 
 if [[ -n "$DRY_RUN" ]]; then
   echo "[publish] dry-run complete — skipping git commit/push"
@@ -58,7 +58,7 @@ if [[ -z "$(git status --porcelain)" ]]; then
 fi
 
 git add -A
-git commit -m "chore: auto-publish new post [$(date '+%Y-%m-%d')]"
+git commit -m "Publish new post"
 git push origin main
 
 echo "[publish] $(date '+%Y-%m-%d %H:%M:%S') — done"
