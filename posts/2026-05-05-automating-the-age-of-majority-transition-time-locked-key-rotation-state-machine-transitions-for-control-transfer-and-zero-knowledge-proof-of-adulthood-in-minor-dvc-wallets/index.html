@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-05-05">
+<meta name="keywords" content="digital verifiable credentials, age of majority transition, time-locked key rotation, zero-knowledge proof of adulthood, minor DVC wallets, DID document automation, privacy-preserving identity, finite state machine control transfer, guardian permission revocation, digital coming-of-age cliff">
+<meta name="description" content="Automate minor-to-adult DVC transitions using finite state machines, time-locked key rotation, and ZKPs for seamless, privacy-preserving digital identity handoffs.">
+
+<title>Automating the Age-of-Majority Transition: Time-Locked Key Rotation, State Machine Transitions for Control Transfer, and Zero-Knowledge Proof of Adulthood in Minor DVC Wallets – Digital Verifiable Credentials for Children</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-74066ca329e1ac19c53faf31dafc0aff.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Digital Verifiable Credentials for Children</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#why-automation-is-a-child-right-not-just-a-tech-feature" id="toc-why-automation-is-a-child-right-not-just-a-tech-feature" class="nav-link active" data-scroll-target="#why-automation-is-a-child-right-not-just-a-tech-feature">Why Automation is a Child Right, Not Just a Tech Feature</a></li>
+  <li><a href="#state-machine-patterns-for-seamless-control-transfer" id="toc-state-machine-patterns-for-seamless-control-transfer" class="nav-link" data-scroll-target="#state-machine-patterns-for-seamless-control-transfer">State Machine Patterns for Seamless Control Transfer</a>
+  <ul class="collapse">
+  <li><a href="#the-lifecycle-finite-state-machine" id="toc-the-lifecycle-finite-state-machine" class="nav-link" data-scroll-target="#the-lifecycle-finite-state-machine">The Lifecycle Finite State Machine</a></li>
+  <li><a href="#implementing-the-state-machine-in-policy-and-code" id="toc-implementing-the-state-machine-in-policy-and-code" class="nav-link" data-scroll-target="#implementing-the-state-machine-in-policy-and-code">Implementing the State Machine in Policy and Code</a></li>
+  </ul></li>
+  <li><a href="#time-locked-cryptography-for-frictionless-key-rotation" id="toc-time-locked-cryptography-for-frictionless-key-rotation" class="nav-link" data-scroll-target="#time-locked-cryptography-for-frictionless-key-rotation">Time-Locked Cryptography for Frictionless Key Rotation</a>
+  <ul class="collapse">
+  <li><a href="#how-time-locks-enable-automated-rotation" id="toc-how-time-locks-enable-automated-rotation" class="nav-link" data-scroll-target="#how-time-locks-enable-automated-rotation">How Time-Locks Enable Automated Rotation</a></li>
+  </ul></li>
+  <li><a href="#zero-knowledge-proofs-proving-adulthood-without-exposing-identity" id="toc-zero-knowledge-proofs-proving-adulthood-without-exposing-identity" class="nav-link" data-scroll-target="#zero-knowledge-proofs-proving-adulthood-without-exposing-identity">Zero-Knowledge Proofs: Proving Adulthood Without Exposing Identity</a>
+  <ul class="collapse">
+  <li><a href="#bbs-signatures-and-range-proofs-in-transition-logic" id="toc-bbs-signatures-and-range-proofs-in-transition-logic" class="nav-link" data-scroll-target="#bbs-signatures-and-range-proofs-in-transition-logic">BBS+ Signatures and Range Proofs in Transition Logic</a></li>
+  </ul></li>
+  <li><a href="#programmatically-revoking-guardian-permissions" id="toc-programmatically-revoking-guardian-permissions" class="nav-link" data-scroll-target="#programmatically-revoking-guardian-permissions">Programmatically Revoking Guardian Permissions</a>
+  <ul class="collapse">
+  <li><a href="#updating-the-did-document" id="toc-updating-the-did-document" class="nav-link" data-scroll-target="#updating-the-did-document">Updating the DID Document</a></li>
+  <li><a href="#consent-evolution-and-dynamic-credentials" id="toc-consent-evolution-and-dynamic-credentials" class="nav-link" data-scroll-target="#consent-evolution-and-dynamic-credentials">Consent Evolution and Dynamic Credentials</a></li>
+  </ul></li>
+  <li><a href="#migrating-wallet-configurations-from-shared-to-sovereign" id="toc-migrating-wallet-configurations-from-shared-to-sovereign" class="nav-link" data-scroll-target="#migrating-wallet-configurations-from-shared-to-sovereign">Migrating Wallet Configurations: From Shared to Sovereign</a>
+  <ul class="collapse">
+  <li><a href="#configuration-migration-steps" id="toc-configuration-migration-steps" class="nav-link" data-scroll-target="#configuration-migration-steps">Configuration Migration Steps</a></li>
+  </ul></li>
+  <li><a href="#interoperability-and-governance-the-four-layers-of-transition" id="toc-interoperability-and-governance-the-four-layers-of-transition" class="nav-link" data-scroll-target="#interoperability-and-governance-the-four-layers-of-transition">Interoperability and Governance: The Four Layers of Transition</a></li>
+  <li><a href="#actionable-takeaways-for-government-and-un-programs" id="toc-actionable-takeaways-for-government-and-un-programs" class="nav-link" data-scroll-target="#actionable-takeaways-for-government-and-un-programs">Actionable Takeaways for Government and UN Programs</a></li>
+  <li><a href="#summary-table-technical-mechanisms-for-transition" id="toc-summary-table-technical-mechanisms-for-transition" class="nav-link" data-scroll-target="#summary-table-technical-mechanisms-for-transition">Summary Table: Technical Mechanisms for Transition</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Automating the Age-of-Majority Transition: Time-Locked Key Rotation, State Machine Transitions for Control Transfer, and Zero-Knowledge Proof of Adulthood in Minor DVC Wallets</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Digital Identity</div>
+    <div class="quarto-category">Cryptography</div>
+    <div class="quarto-category">Public Sector Technology</div>
+    <div class="quarto-category">Privacy Engineering</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Automate minor-to-adult DVC transitions using finite state machines, time-locked key rotation, and ZKPs for seamless, privacy-preserving digital identity handoffs.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ian Merlos </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 5, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+<div>
+  <div class="keywords">
+    <div class="block-title">Keywords</div>
+    <p>digital verifiable credentials, age of majority transition, time-locked key rotation, zero-knowledge proof of adulthood, minor DVC wallets, DID document automation, privacy-preserving identity, finite state machine control transfer, guardian permission revocation, digital coming-of-age cliff</p>
+  </div>
+</div>
+
+</header>
+
+
+<p>There’s a quiet crisis lurking in digital identity systems for kids, and we’re calling it the “Digital Coming-of-Age Cliff.” Right now, millions of minors hold digital verifiable credentials (DVCs) that live in wallets managed by their parents or guardians. And honestly? These setups work pretty well for the basics: birth registration, health records, getting enrolled in school. But then the calendar flips. What actually happens on the exact day that kid turns 18 (or whatever the local age of majority is)?</p>
+<p>In a lot of pilot programs and older systems, the answer is… nothing. Or, if you’re unlucky, the system just locks them out completely.</p>
+<p>Skip the automation, and you’re looking at a whole lot of manual paperwork. A government worker has to update records, parents have to formally hand over control, and the new adult gets stuck navigating a maze of re-registration forms. That’s where the <strong>digital cliff</strong> really shows up: suddenly, rights to privacy, self-determination, and basic services get delayed—or flat-out denied. Think about a 19-year-old trying to access reproductive health care, open a bank account, or land their first real job. If their digital identity hasn’t officially “graduated” yet, it’s not just an inconvenience. It’s a hard stop on their economic participation and basic human rights.</p>
+<p>If we’re going to build <strong>minor-centric DVC ecosystems</strong>, we need to design the exit door just as carefully as the front one. In this post, we’ll break down how to <strong>automate the age-of-majority transition</strong> using time-locked cryptography, finite state machines to handle control handoffs, and zero-knowledge proofs (ZKPs) to verify adulthood without spilling sensitive PII. We’ll also walk through how governments and UN programs can actually roll these patterns out, keeping transitions smooth and privacy-forward while sticking to the spirit of the Convention on the Rights of the Child (UNCRC)—especially Article 12 (evolving capacities) and Article 16 (privacy).</p>
+<section id="why-automation-is-a-child-right-not-just-a-tech-feature" class="level2">
+<h2 class="anchored" data-anchor-id="why-automation-is-a-child-right-not-just-a-tech-feature">Why Automation is a Child Right, Not Just a Tech Feature</h2>
+<p>Let’s be clear: from a development-tech standpoint, automation isn’t just a convenience feature. It’s an inclusion tool. UNICEF puts the number of unregistered births at around <strong>40 million</strong>, and digital IDs are absolutely key to closing that gap. But here’s the thing: getting kids into the system is only half the battle. Keeping them in it—and managing the whole lifecycle—matters just as much. If a digital ID needs a manual paperwork shuffle to flip from “minor” to “adult,” you’re going to leave people behind. We’re talking about folks in remote areas, those who aren’t super tech-savvy, or anyone who just can’t easily get to a government office. They’re the ones who pay the price.</p>
+<p>When you automate that handoff, you get three big wins: 1. <strong>Non-Discrimination:</strong> Every kid flips to adult status the exact second they hit the legal age, no matter where they live or how involved their guardians are. 2. <strong>Privacy Preservation:</strong> Automated handoffs can lean on cryptographic proofs instead of forcing a whole new round of PII collection, which drastically cuts down on data hoarding risks. 3. <strong>Service Continuity:</strong> Verifiers (we’re looking at you, banks, clinics, and employers) keep getting valid proofs without missing a beat. This keeps us on track with the <strong>interoperability</strong> goals we laid out in the <em>Architecting the Minor-Centric DVC Ecosystem</em> post.</p>
+<p>This all ties back to the <strong>bootstrapping trust</strong> and guardian delegation patterns we covered in <a href="posts/2026-05-03-bootstrapping-trust-technical-foundations-and-architectural-patterns-for-digital-verifiable-credentials-in-minor-centric-ecosystems/">Bootstrapping Trust: Technical Foundations and Architectural Patterns for Digital Verifiable Credentials in Minor-Centric Ecosystems</a>. Now, let’s talk about how to gracefully exit that model.</p>
+</section>
+<section id="state-machine-patterns-for-seamless-control-transfer" class="level2">
+<h2 class="anchored" data-anchor-id="state-machine-patterns-for-seamless-control-transfer">State Machine Patterns for Seamless Control Transfer</h2>
+<p>If you want to automate these lifecycle shifts, the best move is to model the wallet’s permission structure as a <strong>Finite State Machine (FSM)</strong>. Basically, an FSM lets you map out clear buckets (like <code>Minor_Guardian</code>, <code>Transitioning</code>, and <code>Adult_Autonomous</code>) and set strict rules for jumping between them based on specific triggers. It’s a clean way to avoid those messy “zombie states” you sometimes get with patchwork updates—where permissions are half-revoked or keys go stale.</p>
+<section id="the-lifecycle-finite-state-machine" class="level3">
+<h3 class="anchored" data-anchor-id="the-lifecycle-finite-state-machine">The Lifecycle Finite State Machine</h3>
+<p>Consider the following state diagram for a minor’s DVC wallet. This pattern can be implemented in the wallet application logic or enforced by a government-managed DID controller service.</p>
+<blockquote class="blockquote">
+<p><strong>Diagram Description:</strong> A state machine graph with three nodes. 1. <strong>Node A: <code>MINOR_GUARDIAN</code></strong>. The default state. Control is shared. Guardian holds <code>authentication</code> and <code>assertionMethod</code> capabilities. Child holds <code>keyAgreement</code> for private communications. 2. <strong>Transition A→B:</strong> Triggered by event <code>BIRTHDAY_REACHED</code> with guard clause <code>age &gt;= jurisdictional_majority</code>. Action: <code>initiate_key_rotation</code>, <code>lock_guardian_write</code>. 3. <strong>Node B: <code>TRANSITIONING</code></strong>. A transient state. Guardian permissions are read-only. New adult keys are being derived or activated. ZKP proofs are generated to confirm adulthood to the system. 4. <strong>Transition B→C:</strong> Triggered by event <code>ROTATION_COMPLETE</code>. Action: <code>revoke_guardian_keys</code>, <code>update_did_document</code>, <code>migrate_wallet_config</code>. 5. <strong>Node C: <code>ADULT_AUTONOMOUS</code></strong>. Final state. Child holds full <code>authentication</code> and <code>assertionMethod</code>. Guardian keys are removed from the DID document. Wallet config switches to adult schemas.</p>
+</blockquote>
+</section>
+<section id="implementing-the-state-machine-in-policy-and-code" class="level3">
+<h3 class="anchored" data-anchor-id="implementing-the-state-machine-in-policy-and-code">Implementing the State Machine in Policy and Code</h3>
+<p>For the government architects reading this: keep that state machine flexible. The “age of majority” isn’t a one-size-fits-all number (we’re looking at 16, 18, sometimes 21). Hardcoding those thresholds is a fast track to technical debt. Instead, lean on a <strong>policy-driven configuration</strong> so the state machine pulls the actual threshold from a secure, updatable registry.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example Policy Configuration for State Machine (YAML)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lifecycle_policy</span><span class="kw">:</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">jurisdiction</span><span class="kw">:</span><span class="at"> </span><span class="st">"Country_X"</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">age_of_majority</span><span class="kw">:</span><span class="at"> </span><span class="dv">18</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">state_machine</span><span class="kw">:</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">initial_state</span><span class="kw">:</span><span class="at"> </span><span class="st">"MINOR_GUARDIAN"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">transitions</span><span class="kw">:</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">from</span><span class="kw">:</span><span class="at"> </span><span class="st">"MINOR_GUARDIAN"</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">event</span><span class="kw">:</span><span class="at"> </span><span class="st">"DATE_CHECK"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">condition</span><span class="kw">:</span><span class="at"> </span><span class="st">"credential.issuance_date + age_of_majority &lt;= current_date"</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span><span class="at"> </span><span class="st">"TRANSITIONING"</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">actions</span><span class="kw">:</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="st">"encrypt_guardian_keys_with_timelock"</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="st">"generate_adulthood_zkp"</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">from</span><span class="kw">:</span><span class="at"> </span><span class="st">"TRANSITIONING"</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">event</span><span class="kw">:</span><span class="at"> </span><span class="st">"KEY_ROTATION_SUCCESS"</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">target</span><span class="kw">:</span><span class="at"> </span><span class="st">"ADULT_AUTONOMOUS"</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">actions</span><span class="kw">:</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="st">"publish_did_update"</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="st">"revoke_guardian_delegation"</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="st">"notify_user_transition_complete"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This pattern aligns neatly with the <strong>event-driven credential issuance</strong> workflows we explored in <a href="posts/2026-05-04-orchestrating-the-health-to-crvs-continuum-secure-interoperability-patterns-and-event-driven-credential-issuance-for-minor-digital-identity/">Orchestrating the Health-to-CRVS Continuum</a>, ensuring that the system reacts to actual data events rather than waiting for someone to manually flip a switch.</p>
+</section>
+</section>
+<section id="time-locked-cryptography-for-frictionless-key-rotation" class="level2">
+<h2 class="anchored" data-anchor-id="time-locked-cryptography-for-frictionless-key-rotation">Time-Locked Cryptography for Frictionless Key Rotation</h2>
+<p>Let’s talk about a real pain point in DVC systems: <strong>key rotation</strong>. When a kid officially becomes an adult, the cryptographic keys that sign transactions and verify credentials usually need to swap out to match the new ownership structure. If you leave that up to the user to manually generate new keys and update their DID doc, you’re basically building an exclusion filter.</p>
+<p><strong>Time-locked cryptography</strong> solves this by allowing keys to be pre-generated and encrypted such that they can only be decrypted or activated after a specific timestamp.</p>
+<section id="how-time-locks-enable-automated-rotation" class="level3">
+<h3 class="anchored" data-anchor-id="how-time-locks-enable-automated-rotation">How Time-Locks Enable Automated Rotation</h3>
+<p>During the initial provisioning of a minor’s identity (e.g., at birth registration), the system can generate a set of “adult keys” and encrypt them using a time-lock puzzle or a threshold scheme where one share is held by a trusted government oracle that releases it only after the birthday.</p>
+<ol type="1">
+<li><strong>Pre-computation:</strong> At issuance, generate <code>KeySet_Major</code> and encrypt it with a time-lock function <code>T(timestamp=birthdate + 18 years)</code>.</li>
+<li><strong>Storage:</strong> Store the encrypted key material in the wallet’s secure enclave or a government-backed key escrow (with strict access controls).</li>
+<li><strong>Activation:</strong> On the birthday, the wallet or backend service solves the time-lock or requests the release, decrypts <code>KeySet_Major</code>, and rotates the DID keys.</li>
+</ol>
+<p>The beauty of this? <strong>No manual intervention is required.</strong> The kid wakes up on their 18th birthday to a wallet that’s already ready for autonomous use.</p>
+<p>This plays perfectly into the <strong>resilient key management</strong> strategies discussed in <a href="posts/2026-05-05-resilient-key-management-for-minor-identities-threshold-cryptography-social-recovery-patterns-and-long-term-did-sustainability/">Resilient Key Management for Minor Identities</a>, where we explored threshold cryptography. Time-locks just add a temporal dimension to that resilience, making sure keys show up exactly when they’re needed without leaking early.</p>
+<blockquote class="blockquote">
+<p><strong>Note on Post-Quantum Safety:</strong> As we prepare for quantum threats, time-locked keys should utilize <strong>post-quantum cryptographic algorithms</strong>. As detailed in <a href="posts/2026-05-05-post-quantum-cryptographic-migration-for-minor-identities-algorithm-agility-hybrid-signature-schemes-and-forward-secure-did-key-rotation/">Post-Quantum Cryptographic Migration for Minor Identities</a>, hybrid signature schemes ensure that keys generated today remain secure decades into the future, protecting the child’s identity throughout their lifetime.</p>
+</blockquote>
+</section>
+</section>
+<section id="zero-knowledge-proofs-proving-adulthood-without-exposing-identity" class="level2">
+<h2 class="anchored" data-anchor-id="zero-knowledge-proofs-proving-adulthood-without-exposing-identity">Zero-Knowledge Proofs: Proving Adulthood Without Exposing Identity</h2>
+<p>Here’s a non-negotiable privacy rule for this transition: the system needs to verify adulthood <strong>without</strong> flashing the exact birth date (or any other PII) to outside verifiers. Or worse, leaking it to the wallet app itself if it’s running on sketchy hardware.</p>
+<p>That’s exactly where <strong>Zero-Knowledge Proofs (ZKPs)</strong> come in. They let the wallet generate a cryptographic receipt that says <code>age &gt;= 18</code> without ever handing over the actual birth date. It’s a core piece of keeping DVCs truly <strong>privacy-preserving</strong>.</p>
+<section id="bbs-signatures-and-range-proofs-in-transition-logic" class="level3">
+<h3 class="anchored" data-anchor-id="bbs-signatures-and-range-proofs-in-transition-logic">BBS+ Signatures and Range Proofs in Transition Logic</h3>
+<p>We recommend using <strong>BLS-12-381</strong> or similar pairing-friendly curves with <strong>BBS+ signatures</strong> to enable short, efficient range proofs. The government issuer signs the child’s credential with a BBS+ signature that includes the birth date as a hidden attribute.</p>
+<p>When the transition event is triggered, the wallet generates a <strong>range proof</strong>: * <strong>Statement:</strong> “The holder of this credential has an age attribute greater than or equal to 18.” * <strong>Proof:</strong> A mathematical proof derived from the BBS+ signature that verifies the range without revealing the value.</p>
+<p>This proof can be submitted to a trusted transition service or used locally to unlock the adult configuration.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"ZkpExampleProof"</span><span class="fu">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"proofPurpose"</span><span class="fu">:</span> <span class="st">"transitionVerification"</span><span class="fu">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"proofValue"</span><span class="fu">:</span> <span class="st">"multibase_encoded_range_proof_data..."</span><span class="fu">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"nonce"</span><span class="fu">:</span> <span class="st">"randomness_for_proof_freshness"</span><span class="fu">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"predicate"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"attribute"</span><span class="fu">:</span> <span class="st">"age"</span><span class="fu">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"operator"</span><span class="fu">:</span> <span class="st">"&gt;="</span><span class="fu">,</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"threshold"</span><span class="fu">:</span> <span class="dv">18</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This approach mirrors the techniques in <a href="posts/2026-05-05-cryptographic-age-proofs-implementing-bbs-signatures-and-range-proofs-for-privacy-preserving-minor-verification/">Cryptographic Age-Proofs: Implementing BBS+ Signatures and Range Proofs</a>, but applies them specifically to the lifecycle transition mechanism. It ensures that even if the wallet app is compromised, the attacker can’t extract the birth date; they’ll only see that the transition condition has been met.</p>
+<p>For low-resource settings where ZKP computation might be heavy, consider <strong>server-assisted ZKP generation</strong> where the government provides a lightweight proof service, or use <strong>optimizing verifiable presentation exchange</strong> techniques as described in <a href="posts/2026-05-05-optimizing-verifiable-presentation-exchange-for-minors-lightweight-cryptography-bandwidth-efficient-protocols-and-edge-wallet-deployment/">Optimizing Verifiable Presentation Exchange for Minors</a>.</p>
+</section>
+</section>
+<section id="programmatically-revoking-guardian-permissions" class="level2">
+<h2 class="anchored" data-anchor-id="programmatically-revoking-guardian-permissions">Programmatically Revoking Guardian Permissions</h2>
+<p>Once adulthood is proven and keys are rotated, the system has to <strong>revoke guardian permissions</strong>. And no, this isn’t just a UI toggle. It’s cryptographic enforcement. Guardians usually hold delegated capabilities in the child’s DID Document, and those need to be stripped out to prevent unauthorized access.</p>
+<section id="updating-the-did-document" class="level3">
+<h3 class="anchored" data-anchor-id="updating-the-did-document">Updating the DID Document</h3>
+<p>The transition process should automatically publish a new version of the DID Document. In practice, that means: 1. Removing the guardian’s public keys from <code>authentication</code> and <code>assertionMethod</code> verification methods. 2. Updating the <code>service</code> endpoints to reflect adult-level access policies. 3. Incrementing the DID version ID to signal the change to verifiers.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"@context"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"https://www.w3.org/ns/did/v1"</span><span class="ot">,</span> <span class="st">"https://identity.foundation/did-configuration/v1"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"did:gov:minor:abc123"</span><span class="fu">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"verificationMethod"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"did:gov:minor:abc123#adult-key-1"</span><span class="fu">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"Multikey"</span><span class="fu">,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"controller"</span><span class="fu">:</span> <span class="st">"did:gov:minor:abc123"</span><span class="fu">,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"publicKeyMultibase"</span><span class="fu">:</span> <span class="st">"z...new_adult_key..."</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">Guardian</span> <span class="er">keys</span> <span class="er">are</span> <span class="er">removed</span> <span class="er">here</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"authentication"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"#adult-key-1"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"assertionMethod"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"#adult-key-1"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"keyAgreement"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"#adult-key-1"</span><span class="ot">]</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This update has to be signed by the new adult keys to prove the change is actually authorized by the rightful owner. If your setup uses a <strong>centralized DVC implementation</strong> for the registry, the government backend can enforce this update, keeping everything consistent across the ecosystem.</p>
+</section>
+<section id="consent-evolution-and-dynamic-credentials" class="level3">
+<h3 class="anchored" data-anchor-id="consent-evolution-and-dynamic-credentials">Consent Evolution and Dynamic Credentials</h3>
+<p>Revocation is also about consent. Credentials issued during minority might have consent scopes that are no longer valid. Take a health credential shared with a parent, for instance—it probably needs to be restricted or re-issued with the adult’s direct consent.</p>
+<p>As we touched on in <a href="posts/2026-05-04-engineering-dynamic-verifiable-credentials-for-minors-secure-update-mechanisms-versioning-strategies-and-automated-consent-evolution-workflows/">Engineering Dynamic Verifiable Credentials for Minors</a>, <strong>automated consent evolution</strong> workflows can handle this gracefully. The transition trigger can kick off a batch update of credential policies, flagging credentials for re-consent or automatically adjusting disclosure rules to match adult privacy standards.</p>
+</section>
+</section>
+<section id="migrating-wallet-configurations-from-shared-to-sovereign" class="level2">
+<h2 class="anchored" data-anchor-id="migrating-wallet-configurations-from-shared-to-sovereign">Migrating Wallet Configurations: From Shared to Sovereign</h2>
+<p>The technical handoff has to be paired with a <strong>wallet configuration migration</strong>. Minor wallets usually run on simplified UX, shared storage, or restricted capabilities to keep the kid safe. Adult wallets, on the other hand, demand full sovereignty.</p>
+<section id="configuration-migration-steps" class="level3">
+<h3 class="anchored" data-anchor-id="configuration-migration-steps">Configuration Migration Steps</h3>
+<ol type="1">
+<li><strong>Schema Update:</strong> Switch from minor-centric JSON-LD contexts to adult contexts. You’ll likely need to add fields for employment, tax IDs, or voting registration.</li>
+<li><strong>Access Control Lists (ACLs):</strong> Update internal wallet ACLs. The guardian’s device or account should lose access to the wallet’s local storage or management APIs.</li>
+<li><strong>Notification and Onboarding:</strong> The wallet should trigger a secure notification to the user (and optionally the guardian, depending on policy) informing them of the transition. This notification should include a simplified guide on using the new autonomous features.</li>
+<li><strong>OID4VC Flow Adjustment:</strong> If the wallet uses <strong>OID4VC</strong> for authorization, the flows must switch from guardian-assisted to direct authorization. As covered in <a href="posts/2026-05-05-oid4vc-implementation-for-minor-identities-guardian-assisted-authorization-flows-dynamic-scope-negotiation-and-secure-token-exchange-patterns/">OID4VC Implementation for Minor Identities</a>, dynamic scope negotiation can help here, allowing the wallet to request adult-level scopes automatically post-transition.</li>
+</ol>
+<blockquote class="blockquote">
+<p><strong>Interoperability Check:</strong> Ensure that the migrated wallet configuration remains compatible with national and international verification endpoints. The <strong>four layers of interoperability</strong> (Technical, Semantic, Organizational, Policy) must be maintained. The transition should not break semantic mappings used by health or education sectors. For instance, a “Student” credential issued by a school should still verify correctly against the new adult DID.</p>
+</blockquote>
+</section>
+</section>
+<section id="interoperability-and-governance-the-four-layers-of-transition" class="level2">
+<h2 class="anchored" data-anchor-id="interoperability-and-governance-the-four-layers-of-transition">Interoperability and Governance: The Four Layers of Transition</h2>
+<p>Implementing automated transitions requires alignment across all interoperability layers.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Layer</th>
+<th style="text-align: left;">Considerations for Age-of-Majority Transition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Technical</strong></td>
+<td style="text-align: left;">Use open standards: W3C DID Core, Verifiable Credentials Data Model. Ensure DID resolution endpoints can handle rapid updates without caching stale guardian keys. Reference <a href="posts/2026-05-05-verifier-side-optimization-for-minor-credential-networks-dns-based-did-resolution-edge-caching-strategies-and-low-latency-status-propagation/">Verifier-Side Optimization</a> for caching strategies that respect transition events.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Semantic</strong></td>
+<td style="text-align: left;">Define clear JSON-LD contexts for <code>ageOfMajority</code>, <code>guardianDelegation</code>, and <code>autonomousControl</code>. Use controlled vocabularies (e.g., schema.org, ISO 19159) to ensure verifiers understand the status change.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Organizational</strong></td>
+<td style="text-align: left;">Government agencies (Civil Registry, Health, Education) must coordinate. The Civil Registry triggers the transition; Health and Education must accept the new DID state. Establish SLAs for transition processing times.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Policy</strong></td>
+<td style="text-align: left;">Legal frameworks must define the exact age and conditions for transition. Policies must address edge cases: emancipated minors, guardians ad litem, or disabilities affecting capacity. Data protection laws (GDPR, local equivalents) must be respected during key rotation and data minimization.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Policy Layer Warning:</strong> Automation assumes a binary age threshold. However, human rights frameworks recognize <strong>evolving capacities</strong>. Some jurisdictions allow partial autonomy before the age of majority (e.g., for healthcare decisions). Your state machine should support <strong>granular transitions</strong>, not just a single “all-or-nothing” flip. This might involve intermediate states like <code>HEALTH_AUTONOMOUS</code> where the child can manage medical DVCs while guardians retain control over financial credentials.</p>
+</section>
+<section id="actionable-takeaways-for-government-and-un-programs" class="level2">
+<h2 class="anchored" data-anchor-id="actionable-takeaways-for-government-and-un-programs">Actionable Takeaways for Government and UN Programs</h2>
+<p>For policymakers and technical leads in government and UN agencies, here are the immediate steps to ensure your DVC systems are ready for the age-of-majority transition:</p>
+<ol type="1">
+<li><strong>Audit Your State Models:</strong> Review your current DVC architecture. Do you have a defined state machine for lifecycle management? If not, adopt an FSM pattern to prevent permission drift.</li>
+<li><strong>Implement Time-Locked Key Provisioning:</strong> Integrate time-locked encryption or threshold schemes during birth registration to ensure adult keys are available without manual rotation.</li>
+<li><strong>Deploy ZKP Age Verification:</strong> Work with cryptographers to implement BBS+ range proofs for adulthood verification. This protects PII and reduces reliance on trusted oracles.</li>
+<li><strong>Automate DID Document Updates:</strong> Script the revocation of guardian keys and rotation of verification methods. Test this in sandbox environments with simulated birthday events.</li>
+<li><strong>Define Policy-Driven Thresholds:</strong> Make the age of majority a configurable parameter in your system, not hard code. Support granular autonomy states for specific sectors.</li>
+<li><strong>Engage Verifiers Early:</strong> Coordinate with banks, health providers, and employers to ensure their verification endpoints can handle DID updates and status changes seamlessly.</li>
+<li><strong>Prioritize Open Standards:</strong> Use W3C standards and open-source libraries. Avoid vendor lock-in that could hinder lifecycle management updates. Reference the <a href="posts/2026-05-04-architecting-the-minor-centric-dvc-ecosystem-a-technical-survey-of-standards-privacy-mechanisms-and-governance-frameworks/">Architecting the Minor-Centric DVC Ecosystem</a> survey for standard recommendations.</li>
+<li><strong>Conduct Human Rights Impact Assessments:</strong> Evaluate the transition process against UNCRC articles. Ensure automation does not erode the right to parental guidance where appropriate, nor delay the right to self-determination.</li>
+</ol>
+</section>
+<section id="summary-table-technical-mechanisms-for-transition" class="level2">
+<h2 class="anchored" data-anchor-id="summary-table-technical-mechanisms-for-transition">Summary Table: Technical Mechanisms for Transition</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Mechanism</th>
+<th style="text-align: left;">Purpose</th>
+<th style="text-align: left;">Key Standards/Tech</th>
+<th style="text-align: left;">Benefit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Finite State Machine</strong></td>
+<td style="text-align: left;">Orchestrate control transfer and permission changes.</td>
+<td style="text-align: left;">State pattern, Event-driven architecture.</td>
+<td style="text-align: left;">Prevents zombie states; ensures deterministic transitions.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Time-Locked Keys</strong></td>
+<td style="text-align: left;">Automate key rotation without user action.</td>
+<td style="text-align: left;">Time-lock puzzles, Threshold crypto, PQC hybrids.</td>
+<td style="text-align: left;">Frictionless rotation; reduces exclusion risk.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Zero-Knowledge Proofs</strong></td>
+<td style="text-align: left;">Verify adulthood without revealing DOB.</td>
+<td style="text-align: left;">BBS+ Signatures, Range Proofs, zk-SNARKs.</td>
+<td style="text-align: left;">Privacy preservation; minimizes data exposure.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>DID Document Updates</strong></td>
+<td style="text-align: left;">Revoke guardian permissions cryptographically.</td>
+<td style="text-align: left;">W3C DID Core, Multikey, StatusList2021.</td>
+<td style="text-align: left;">Enforces autonomy; secure permission revocation.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Wallet Config Migration</strong></td>
+<td style="text-align: left;">Switch UI/UX and internal policies.</td>
+<td style="text-align: left;">JSON-LD, OID4VC, Dynamic Scopes.</td>
+<td style="text-align: left;">Adapts system to adult needs; maintains interoperability.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Automating the age-of-majority transition is a technical imperative and a moral obligation. By leveraging state machines, time-locked cryptography, and zero-knowledge proofs, governments can build DVC systems that respect the evolving capacities of children and empower them with sovereign digital identities exactly when they need them.</p>
+<p>We have the tools. We have the standards. What we need is the will to implement them with a focus on human rights and inclusion. Let’s move beyond the digital cliff and build bridges that carry children safely into adulthood, with their data, their rights, and their dignity intact.</p>
+<p><em>The future of digital identity for children is not just about securing their past; it’s about unlocking their future. With automated, privacy-preserving transitions, we can ensure that every young person steps into adulthood with the digital keys to their own destiny, ready to participate fully in the world they will lead.</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/merlos\.github\.io\/dvc4c\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

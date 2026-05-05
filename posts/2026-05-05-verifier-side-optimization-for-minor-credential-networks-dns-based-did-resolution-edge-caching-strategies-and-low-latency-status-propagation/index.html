@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-05-05">
+<meta name="keywords" content="verifiable credentials optimization, DNS-based DID resolution, edge caching strategies, low-latency verification, minor digital identity, StatusList2021 deltas, parallel verification pipelines, child-centric digital ID, government credential verification, privacy-preserving verification">
+<meta name="description" content="Optimize verifier endpoints for minor credential networks using DNS-based DIDs, edge caching, and parallel pipelines to slash latency while ensuring privacy.">
+
+<title>Verifier-Side Optimization for Minor Credential Networks: DNS-Based DID Resolution, Edge Caching Strategies, and Low-Latency Status Propagation – Digital Verifiable Credentials for Children</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-74066ca329e1ac19c53faf31dafc0aff.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Digital Verifiable Credentials for Children</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-verifier-bottleneck-why-latency-matters-for-child-centric-services" id="toc-the-verifier-bottleneck-why-latency-matters-for-child-centric-services" class="nav-link active" data-scroll-target="#the-verifier-bottleneck-why-latency-matters-for-child-centric-services">The Verifier Bottleneck: Why Latency Matters for Child-Centric Services</a>
+  <ul class="collapse">
+  <li><a href="#understanding-the-verification-journey" id="toc-understanding-the-verification-journey" class="nav-link" data-scroll-target="#understanding-the-verification-journey">Understanding the Verification Journey</a></li>
+  <li><a href="#the-four-layers-of-interoperability-in-practice" id="toc-the-four-layers-of-interoperability-in-practice" class="nav-link" data-scroll-target="#the-four-layers-of-interoperability-in-practice">The Four Layers of Interoperability in Practice</a></li>
+  </ul></li>
+  <li><a href="#dns-based-did-resolution-trading-decentralization-for-government-scale-performance" id="toc-dns-based-did-resolution-trading-decentralization-for-government-scale-performance" class="nav-link" data-scroll-target="#dns-based-did-resolution-trading-decentralization-for-government-scale-performance">DNS-Based DID Resolution: Trading Decentralization for Government-Scale Performance</a>
+  <ul class="collapse">
+  <li><a href="#how-dns-dids-work-under-the-hood" id="toc-how-dns-dids-work-under-the-hood" class="nav-link" data-scroll-target="#how-dns-dids-work-under-the-hood">How DNS DIDs Work Under the Hood</a></li>
+  <li><a href="#implementation-steps-for-government-registries" id="toc-implementation-steps-for-government-registries" class="nav-link" data-scroll-target="#implementation-steps-for-government-registries">Implementation Steps for Government Registries</a></li>
+  </ul></li>
+  <li><a href="#edge-caching-architectures-for-high-throughput-verification" id="toc-edge-caching-architectures-for-high-throughput-verification" class="nav-link" data-scroll-target="#edge-caching-architectures-for-high-throughput-verification">Edge Caching Architectures for High-Throughput Verification</a>
+  <ul class="collapse">
+  <li><a href="#cdn-style-caching-for-verifiable-credential-metadata" id="toc-cdn-style-caching-for-verifiable-credential-metadata" class="nav-link" data-scroll-target="#cdn-style-caching-for-verifiable-credential-metadata">CDN-Style Caching for Verifiable Credential Metadata</a></li>
+  <li><a href="#cache-invalidation-and-data-freshness-guarantees" id="toc-cache-invalidation-and-data-freshness-guarantees" class="nav-link" data-scroll-target="#cache-invalidation-and-data-freshness-guarantees">Cache Invalidation and Data Freshness Guarantees</a></li>
+  </ul></li>
+  <li><a href="#low-latency-status-propagation-and-parallel-verification-pipelines" id="toc-low-latency-status-propagation-and-parallel-verification-pipelines" class="nav-link" data-scroll-target="#low-latency-status-propagation-and-parallel-verification-pipelines">Low-Latency Status Propagation and Parallel Verification Pipelines</a>
+  <ul class="collapse">
+  <li><a href="#statuslist2021-and-delta-updates-at-scale" id="toc-statuslist2021-and-delta-updates-at-scale" class="nav-link" data-scroll-target="#statuslist2021-and-delta-updates-at-scale">StatusList2021 and Delta Updates at Scale</a></li>
+  <li><a href="#building-a-parallel-verification-engine" id="toc-building-a-parallel-verification-engine" class="nav-link" data-scroll-target="#building-a-parallel-verification-engine">Building a Parallel Verification Engine</a></li>
+  </ul></li>
+  <li><a href="#bandwidth-efficient-proof-validation-in-low-resource-settings" id="toc-bandwidth-efficient-proof-validation-in-low-resource-settings" class="nav-link" data-scroll-target="#bandwidth-efficient-proof-validation-in-low-resource-settings">Bandwidth-Efficient Proof Validation in Low-Resource Settings</a>
+  <ul class="collapse">
+  <li><a href="#optimizing-cryptographic-operations-for-edge-devices" id="toc-optimizing-cryptographic-operations-for-edge-devices" class="nav-link" data-scroll-target="#optimizing-cryptographic-operations-for-edge-devices">Optimizing Cryptographic Operations for Edge Devices</a></li>
+  <li><a href="#zero-knowledge-proofs-vs.-traditional-signatures-a-trade-off-analysis" id="toc-zero-knowledge-proofs-vs.-traditional-signatures-a-trade-off-analysis" class="nav-link" data-scroll-target="#zero-knowledge-proofs-vs.-traditional-signatures-a-trade-off-analysis">Zero-Knowledge Proofs vs.&nbsp;Traditional Signatures: A Trade-Off Analysis</a></li>
+  </ul></li>
+  <li><a href="#human-rights-data-protection-and-cybersecurity-by-design" id="toc-human-rights-data-protection-and-cybersecurity-by-design" class="nav-link" data-scroll-target="#human-rights-data-protection-and-cybersecurity-by-design">Human Rights, Data Protection, and Cybersecurity by Design</a>
+  <ul class="collapse">
+  <li><a href="#privacy-preserving-verification-patterns" id="toc-privacy-preserving-verification-patterns" class="nav-link" data-scroll-target="#privacy-preserving-verification-patterns">Privacy-Preserving Verification Patterns</a></li>
+  <li><a href="#compliance-with-un-guidelines-and-regional-data-laws" id="toc-compliance-with-un-guidelines-and-regional-data-laws" class="nav-link" data-scroll-target="#compliance-with-un-guidelines-and-regional-data-laws">Compliance with UN Guidelines and Regional Data Laws</a></li>
+  </ul></li>
+  <li><a href="#conclusion-actionable-takeaways" id="toc-conclusion-actionable-takeaways" class="nav-link" data-scroll-target="#conclusion-actionable-takeaways">Conclusion &amp; Actionable Takeaways</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Verifier-Side Optimization for Minor Credential Networks: DNS-Based DID Resolution, Edge Caching Strategies, and Low-Latency Status Propagation</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Digital Identity</div>
+    <div class="quarto-category">Verifiable Credentials</div>
+    <div class="quarto-category">Government Technology</div>
+    <div class="quarto-category">Cybersecurity</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Optimize verifier endpoints for minor credential networks using DNS-based DIDs, edge caching, and parallel pipelines to slash latency while ensuring privacy.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ian Merlos </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 5, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+<div>
+  <div class="keywords">
+    <div class="block-title">Keywords</div>
+    <p>verifiable credentials optimization, DNS-based DID resolution, edge caching strategies, low-latency verification, minor digital identity, StatusList2021 deltas, parallel verification pipelines, child-centric digital ID, government credential verification, privacy-preserving verification</p>
+  </div>
+</div>
+
+</header>
+
+
+<p>There’s a bit of a paradox brewing in government services for kids right now. On one hand, we’ve got these shiny new digital verifiable credentials that promise seamless, privacy-friendly access to health, education, and social support. On the other? The old-school verification pipelines are dragging their feet, adding latency that just won’t cut it—especially when you’re dealing with high traffic or spotty internet.</p>
+<p>Think about a rural clinic trying to check a vaccination record. Or a school admin verifying enrollment. An 800-millisecond delay might sound tiny to an engineer, but in the real world, it can mean denied care, stalled registrations, or just plain frustrated parents. This isn’t just an engineering headache; it’s a rights issue. The UN Committee on the Rights of the Child has been clear about this: administrative friction directly undermines a child’s right to health, education, and social security. So, how do we fix it? <strong>Verifier-side optimization for minor credential networks</strong> needs to move from a nice-to-have to a core architectural priority. We need to balance performance with open standards, data minimization, and governance that actually puts kids first.</p>
+<section id="the-verifier-bottleneck-why-latency-matters-for-child-centric-services" class="level2">
+<h2 class="anchored" data-anchor-id="the-verifier-bottleneck-why-latency-matters-for-child-centric-services">The Verifier Bottleneck: Why Latency Matters for Child-Centric Services</h2>
+<p>In most government digital ID setups, the issuer (like the civil registry or health ministry) and the holder (say, a caregiver’s wallet or school portal) usually have decent resources. The real choke point? It’s almost always the verifier. That’s the endpoint that has to receive the presentation, resolve the issuer’s public key, validate the crypto proofs, check revocation status, and run policy checks before saying “yes” to service access.</p>
+<p>If you’re using decentralized ledgers, every step might involve multiple network hops, fetching blocks, and cross-chain checks. In practice? You’re looking at verification times between 1.2 and 4.5 seconds under normal load, and that spikes wildly during peak times like enrollment season or national immunization drives.</p>
+<p>For kids, time isn’t just a metric on a dashboard. A slow birth credential check can delay neonatal care. A laggy education check can stall integration for displaced minors. A sluggish welfare check can hold up cash transfers for families who need them now. The development sector has known for ages that last-mile delivery depends on responsiveness. Apply that to digital credentials, and latency is directly tied to equity.</p>
+<section id="understanding-the-verification-journey" class="level3">
+<h3 class="anchored" data-anchor-id="understanding-the-verification-journey">Understanding the Verification Journey</h3>
+<p>A child’s digital identity life spans a lot of government sectors, and each one verifies things differently: - <strong>Prenatal &amp; Health:</strong> Clinics are checking vaccination records, maternal health info, maybe genetic screening results. This often happens on mobile devices where the connection might drop out at any second. - <strong>Birth Registration (CRVS):</strong> Civil registries issue the foundational ID here. Verifiers range from health facilities to social services and immigration portals. - <strong>Education:</strong> Schools need to validate enrollment, special needs accommodations, and academic progress. This scales up massively during back-to-school season. - <strong>Social Policy:</strong> Welfare agencies are assessing eligibility for subsidies, disability support, or child protection. This demands strict data minimization. - <strong>Youth Employment:</strong> Once they hit 18+, those credentials shift to job market verification. Employers, licensing boards, and banks become the verifiers.</p>
+<p>As we dug into <em>Orchestrating the Health-to-CRVS Continuum: Secure Interoperability Patterns and Event-Driven Credential Issuance for Minor Digital Identity — Explore secure interoperability patterns linking HL7 FHIR and CRVS for digital identity issuance at birth, ensuring privacy and event-driven workflows (url: posts/2024-05-04-orchestrating-the-health-to-crvs-continuum-secure-interoperability-patterns-and-event-driven-credential-issuance-for-minor-digital-identity/)</em>, seamless handoffs between sectors rely on verifiers that actually behave. When the pipeline stalls, the whole continuum cracks.</p>
+</section>
+<section id="the-four-layers-of-interoperability-in-practice" class="level3">
+<h3 class="anchored" data-anchor-id="the-four-layers-of-interoperability-in-practice">The Four Layers of Interoperability in Practice</h3>
+<p>You can’t just optimize tech in a vacuum. Both the European Interoperability Framework and UNICEF’s guidelines stress that interoperability has four layers: 1. <strong>Technical:</strong> Protocols, APIs, resolution endpoints, and cryptographic suites. 2. <strong>Semantic:</strong> JSON-LD contexts, W3C Verifiable Credential data models, and ontology mapping. 3. <strong>Organizational:</strong> SLAs, incident response workflows, and cross-agency coordination. 4. <strong>Policy:</strong> Data protection laws, consent frameworks, and human rights compliance.</p>
+<p>A classic mistake? Fixing technical latency but breaking semantic consistency or policy rules. For instance, caching revocation lists too aggressively might speed things up, but if regional privacy laws require fresh data, you’re in violation. Real optimization has to align with all four layers. Speed shouldn’t come at the cost of trust, privacy, or compliance.</p>
+</section>
+</section>
+<section id="dns-based-did-resolution-trading-decentralization-for-government-scale-performance" class="level2">
+<h2 class="anchored" data-anchor-id="dns-based-did-resolution-trading-decentralization-for-government-scale-performance">DNS-Based DID Resolution: Trading Decentralization for Government-Scale Performance</h2>
+<p>Distributed ledger tech (DLT) sounds great on paper for resilience, but it comes with a real-world performance tax. Querying a blockchain means fetching blocks, verifying Merkle proofs, dealing with partitions… it adds up. For government systems where the state is the trusted party, that overhead is often just unnecessary. Enter DNS-based Decentralized Identifiers (DIDs). They’re a pragmatic alternative: W3C-compliant, open standards, and they leverage global DNS infrastructure to hit sub-50ms resolution times.</p>
+<section id="how-dns-dids-work-under-the-hood" class="level3">
+<h3 class="anchored" data-anchor-id="how-dns-dids-work-under-the-hood">How DNS DIDs Work Under the Hood</h3>
+<p>A DNS DID looks like <code>did:dns:&lt;domain&gt;:&lt;identifier&gt;</code>. Resolution happens via standard DNS queries or HTTPS, returning a DID Document with keys and endpoints. No consensus mechanisms, no immutable ledgers needed. Instead, you rely on DNSSEC for integrity and authoritative name servers for availability.</p>
+<p>Picture a health ministry issuing vaccination creds. The DID <code>did:dns:gov.health.minor:vacc-issuer</code> resolves to a TXT record with the JSON. When a clinic gets a presentation, it queries DNS, grabs the key, and validates. We’re talking 20–40ms resolution on average, compared to 1.5–3.0s for Ethereum or Hyperledger Fabric under similar loads.</p>
+<p><em>Diagram Description:</em> Imagine a three-tier verification flow. At the top, the caregiver’s device sends a verifiable presentation to the government verifier endpoint. The endpoint splits the request into three parallel paths: (1) DNS resolution for the issuer’s DID document, (2) local cache lookup for previously fetched public keys, and (3) status list fetch for revocation checks. All three paths feed into a cryptographic validation module, which outputs a pass/fail result along with policy compliance flags. The entire pipeline operates within a 200ms budget, with fallback mechanisms for network degradation.</p>
+</section>
+<section id="implementation-steps-for-government-registries" class="level3">
+<h3 class="anchored" data-anchor-id="implementation-steps-for-government-registries">Implementation Steps for Government Registries</h3>
+<p>Rolling out DNS DIDs needs planning, but it uses what you already have. Here’s a practical sequence:</p>
+<ol type="1">
+<li><strong>Define Namespace Strategy:</strong> Map each issuing agency to a subdomain (e.g., <code>gov.health.minor</code>, <code>gov.edu.minor</code>). Skip flat namespaces to avoid collisions.</li>
+<li><strong>Enable DNSSEC:</strong> Sign all TXT and HTTPS records with DNSSEC to stop cache poisoning and ensure cryptographic integrity. Most national providers support this out-of-the-box.</li>
+<li><strong>Configure Resolution Endpoints:</strong> Put W3C-compliant DID resolution endpoints behind reverse proxies. Rate limiting, TLS 1.3, and HTTP/2 multiplexing are must-haves.</li>
+<li><strong>Integrate with National PKI:</strong> Map DNS DID public keys to existing government CAs. Use Ed25519 or X25519 for lightweight checks.</li>
+<li><strong>Monitor &amp; Optimize:</strong> Track resolution latency, cache hit ratios, and error rates. Use observability tools like Prometheus + Grafana to establish baselines.</li>
+</ol>
+<p>As mentioned in <em>Bootstrapping Trust: Technical Foundations and Architectural Patterns for Digital Verifiable Credentials in Minor-Centric Ecosystems — Build secure, compliant digital identity for minors using W3C verifiable credentials, guardian delegation, and zero-knowledge proofs (url: posts/2024-05-03-bootstrapping-trust-technical-foundations-and-architectural-patterns-for-digital-verifiable-credentials-in-minor-centric-ecosystems/)</em>, trust starts with predictable resolution. DNS DIDs give you that foundation without sacrificing openness.</p>
+</section>
+</section>
+<section id="edge-caching-architectures-for-high-throughput-verification" class="level2">
+<h2 class="anchored" data-anchor-id="edge-caching-architectures-for-high-throughput-verification">Edge Caching Architectures for High-Throughput Verification</h2>
+<p>Even if DID resolution is fast, verifying credentials over and over eats bandwidth and server resources. Edge caching helps by storing frequently accessed metadata right near the verifier. Think of it like a local library keeping popular books on the front shelf instead of hauling them from a central warehouse every single time.</p>
+<section id="cdn-style-caching-for-verifiable-credential-metadata" class="level3">
+<h3 class="anchored" data-anchor-id="cdn-style-caching-for-verifiable-credential-metadata">CDN-Style Caching for Verifiable Credential Metadata</h3>
+<p>Government verifiers don’t need to fetch the full DID doc or schema for every transaction. Public keys and contexts don’t change that often. Deploying CDN-style caching at the edge can cut origin load by 60–80% during peaks.</p>
+<p>Implementation usually looks like this: - <strong>Cache Key Design:</strong> Use <code>DID||version_hash||key_id</code> as the cache key. This stops stale data from versioned updates. - <strong>TTL Tuning:</strong> Set short TTLs (5–15 minutes) for auth methods, longer (24–72 hours) for static contexts. - <strong>ETag Validation:</strong> Leverage HTTP conditional requests. If the issuer’s key hasn’t changed, the edge returns a <code>304 Not Modified</code>, saving bandwidth. - <strong>Open-Source Tooling:</strong> Caddy, Varnish, or Traefik can handle caching without vendor lock-in. Cloud options exist, but gov deployments should probably stick to sovereign infrastructure.</p>
+<p>As explored in <em>Optimizing Verifiable Presentation Exchange for Minors: Lightweight Cryptography, Bandwidth-Efficient Protocols, and Edge Wallet Deployment — Optimize verifiable presentation exchange for minors using lightweight cryptography and bandwidth-efficient protocols. Deployment in low-resource settings (url: posts/2024-05-05-optimizing-verifiable-presentation-exchange-for-minors-lightweight-cryptography-bandwidth-efficient-protocols-and-edge-wallet-deployment/)</em>, edge deployment isn’t just about speed; it’s about resilience where connectivity is shaky.</p>
+</section>
+<section id="cache-invalidation-and-data-freshness-guarantees" class="level3">
+<h3 class="anchored" data-anchor-id="cache-invalidation-and-data-freshness-guarantees">Cache Invalidation and Data Freshness Guarantees</h3>
+<p>Caching introduces a tough trade-off: freshness vs.&nbsp;performance. Revocation status, for example, can’t be stale. A cached <code>valid</code> status for a compromised credential could enable fraud.</p>
+<p>To keep data integrity: - <strong>Webhook-Driven Invalidation:</strong> Issuers push purge signals to edge nodes when keys rotate or creds are revoked. - <strong>Delta Propagation:</strong> Send minimal diffs instead of full docs. Edge nodes merge these atomically. - <strong>Stale-While-Revalidate Headers:</strong> Let caches serve slightly old data while fetching fresh versions in the background. This stops verification failures during brief network blips.</p>
+<p>Gov systems need to document these policies clearly. SLAs around max staleness (e.g., 30 seconds for revocation) ensure optimizations don’t break compliance.</p>
+</section>
+</section>
+<section id="low-latency-status-propagation-and-parallel-verification-pipelines" class="level2">
+<h2 class="anchored" data-anchor-id="low-latency-status-propagation-and-parallel-verification-pipelines">Low-Latency Status Propagation and Parallel Verification Pipelines</h2>
+<p>Verification isn’t one operation; it’s a chain of tasks. Running them one after another guarantees latency adds up. Parallelization, paired with efficient status propagation, can slash verification time without compromising security.</p>
+<section id="statuslist2021-and-delta-updates-at-scale" class="level3">
+<h3 class="anchored" data-anchor-id="statuslist2021-and-delta-updates-at-scale">StatusList2021 and Delta Updates at Scale</h3>
+<p>The W3C <code>StatusList2021</code> spec swaps individual revocation endpoints for a single bitmap covering thousands of creds. Each bit is a status: <code>0</code> for valid, <code>1</code> for revoked. This shrinks payloads from kilobytes to bytes—perfect for low-bandwidth spots.</p>
+<p>When a cred is revoked, the issuer updates the bitmap and publishes a delta. Verifiers only download the changed bits. Here’s how a verifier handles a delta efficiently:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hashlib</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> struct</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_status_delta(current_bitmap: <span class="bu">bytes</span>, delta_offset: <span class="bu">int</span>, delta_bits: <span class="bu">bytes</span>) <span class="op">-&gt;</span> <span class="bu">bytes</span>:</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Apply a StatusList2021 delta to the current bitmap.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">    delta_offset: byte position where changes begin</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">    delta_bits: raw bytes containing updated status flags</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> delta_offset <span class="op">+</span> <span class="bu">len</span>(delta_bits) <span class="op">&gt;</span> <span class="bu">len</span>(current_bitmap):</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"Delta exceeds bitmap boundaries"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert to mutable bytearray</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    updated <span class="op">=</span> <span class="bu">bytearray</span>(current_bitmap)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Overwrite only the changed segment</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    updated[delta_offset:delta_offset <span class="op">+</span> <span class="bu">len</span>(delta_bits)] <span class="op">=</span> delta_bits</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Recompute integrity hash for cache validation</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    integrity_hash <span class="op">=</span> hashlib.sha256(<span class="bu">bytes</span>(updated)).hexdigest()</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">bytes</span>(updated), integrity_hash</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This drops status check latency from ~400ms to under 50ms in high-throughput scenarios. Plus, it fits data minimization: verifiers never fetch full registries, only what’s needed.</p>
+</section>
+<section id="building-a-parallel-verification-engine" class="level3">
+<h3 class="anchored" data-anchor-id="building-a-parallel-verification-engine">Building a Parallel Verification Engine</h3>
+<p>A good verification pipeline treats independent ops as concurrent tasks. Take the standard flow: 1. Resolve issuer DID 2. Fetch public key 3. Verify cryptographic signature 4. Check credential status 5. Validate schema &amp; policy rules</p>
+<p>Steps 1, 2, and 4 can run in parallel. Step 3 waits for 2. Step 5 waits for 3 and 4. A parallel engine uses promise-based execution or async queues to max out throughput.</p>
+<p><em>Architecture Description:</em> The verifier endpoint receives a presentation and immediately spawns three asynchronous workers. Worker A queries the DNS resolver. Worker B checks the local cache for the issuer’s key. Worker C fetches the relevant status list segment. Once Worker A or B returns the public key, Worker D begins signature verification. Simultaneously, Worker E evaluates policy rules against the presentation data. A central orchestrator merges results, applies timeout guards (e.g., 200ms hard limit), and returns a structured verification response. If any worker fails, the pipeline falls back to cached state or returns a graceful degradation message, ensuring service continuity.</p>
+<p>As detailed in <em>Centralized DVC Implementation for Degree Attestation: Technical Strategies for High-Volume Issuance, Revocation Management, and Verification Endpoints — Explore technical strategies for centralized DVC degree attestation, including high-volume batch issuance, StatusList2021 revocation, and optimized verification endpoints (url: posts/2024-05-03-centralized-dvc-implementation-for-degree-attestation-technical-strategies-for-high-volume-issuance-revocation-management-and-verification-endpoints/)</em>, parallelization isn’t just a tweak; it’s a prerequisite for national scale.</p>
+</section>
+</section>
+<section id="bandwidth-efficient-proof-validation-in-low-resource-settings" class="level2">
+<h2 class="anchored" data-anchor-id="bandwidth-efficient-proof-validation-in-low-resource-settings">Bandwidth-Efficient Proof Validation in Low-Resource Settings</h2>
+<p>Crypto proof validation is heavy on compute. In areas with bad connectivity or old hardware, heavy algorithms can bottleneck the whole service. Optimizing this means balancing security, privacy, and resource efficiency.</p>
+<section id="optimizing-cryptographic-operations-for-edge-devices" class="level3">
+<h3 class="anchored" data-anchor-id="optimizing-cryptographic-operations-for-edge-devices">Optimizing Cryptographic Operations for Edge Devices</h3>
+<p>Not all signature schemes are equal. Ed25519 is fast (~0.1ms on modern CPUs) and has small keys—ideal for gov verifiers. BBS+ supports zero-knowledge selective disclosure but is heavier (~2–5ms per proof). For high-throughput endpoints, the strategy should be: - <strong>Pre-fetch Verification Keys:</strong> Cache keys at the edge to skip DNS/DID resolution during validation. - <strong>Hardware Acceleration:</strong> Use ARM NEON, Intel AVX2, or WebAssembly SIMD to speed up elliptic curve math. - <strong>Batch Verification:</strong> If multiple creds are presented (e.g., enrollment + vaccine + disability), batch verification cuts overhead by 30–50%.</p>
+<p>Gov deployments should benchmark against actual devices. A clinic kiosk on Android 10/MediaTek won’t behave like a cloud verifier in a national DC. Real-world testing prevents over-engineering.</p>
+</section>
+<section id="zero-knowledge-proofs-vs.-traditional-signatures-a-trade-off-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="zero-knowledge-proofs-vs.-traditional-signatures-a-trade-off-analysis">Zero-Knowledge Proofs vs.&nbsp;Traditional Signatures: A Trade-Off Analysis</h3>
+<p>ZKPs keep privacy by letting holders prove attributes (e.g., “I’m over 16”) without revealing data (e.g., birthdate). This fits child rights and data laws perfectly. But ZKP verification is expensive and bloats payloads.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 41%">
+<col style="width: 46%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Traditional Signatures (Ed25519)</th>
+<th>Zero-Knowledge Proofs (BBS+/Groth16)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Verification Time</td>
+<td>0.1–0.3ms</td>
+<td>2–8ms</td>
+</tr>
+<tr class="even">
+<td>Payload Size</td>
+<td>64 bytes</td>
+<td>500–2000 bytes</td>
+</tr>
+<tr class="odd">
+<td>Selective Disclosure</td>
+<td>Requires issuer support</td>
+<td>Native support</td>
+</tr>
+<tr class="even">
+<td>Hardware Requirements</td>
+<td>Minimal</td>
+<td>Moderate to high</td>
+</tr>
+<tr class="odd">
+<td>Best Use Case</td>
+<td>Bulk verification, low-latency endpoints</td>
+<td>Sensitive attributes, privacy-critical services</td>
+</tr>
+</tbody>
+</table>
+<p>A hybrid approach usually wins: use traditional signatures for routine stuff (enrollment, attendance) and save ZKPs for sensitive contexts (disability, mental health, age checks for restricted services). As explored in <em>Cryptographic Age-Proofs: Implementing BBS+ Signatures and Range Proofs for Privacy-Preserving Minor Verification — Explore BBS+ signatures and zero-knowledge range proofs for privacy-preserving age verification in government services, protecting minors’ data (url: posts/2024-05-05-cryptographic-age-proofs-implementing-bbs-signatures-and-range-proofs-for-privacy-preserving-minor-verification/)</em>, privacy and performance aren’t mutually exclusive; they just require architectural trade-offs guided by policy.</p>
+</section>
+</section>
+<section id="human-rights-data-protection-and-cybersecurity-by-design" class="level2">
+<h2 class="anchored" data-anchor-id="human-rights-data-protection-and-cybersecurity-by-design">Human Rights, Data Protection, and Cybersecurity by Design</h2>
+<p>Technical optimization can’t outpace ethical governance. Building verifiers for minors means every decision has human rights implications. UN Guidelines, GDPR, and regional frameworks all point to the same core principles: purpose limitation, data minimization, security by design, and accountability.</p>
+<section id="privacy-preserving-verification-patterns" class="level3">
+<h3 class="anchored" data-anchor-id="privacy-preserving-verification-patterns">Privacy-Preserving Verification Patterns</h3>
+<p>Verifiers should adopt a “verify less, trust more” mindset. This means: - <strong>Selective Disclosure Enforcement:</strong> Reject presentations with unnecessary attributes. If a school just needs enrollment status, reject payloads with health or financial data. - <strong>Ephemeral Verification Sessions:</strong> Don’t log raw presentations. Store only outcomes (pass/fail) and compliance flags. - <strong>Blind Verification Endpoints:</strong> Use anonymized proxies to stop verifier IPs from correlating with holder identities. - <strong>Cache Hygiene:</strong> Ensure edge caches never store PII. Only cache public keys, contexts, and bitmaps.</p>
+<p>As emphasized in <em>Resilient Key Management for Minor Identities: Threshold Cryptography, Social Recovery Patterns, and Long-Term DID Sustainability — Explore resilient key management for minor identities using threshold cryptography and social recovery. Ensure long-term DID sustainability for children (url: posts/2024-05-05-resilient-key-management-for-minor-identities-threshold-cryptography-social-recovery-patterns-and-long-term-did-sustainability/)</em>, key lifecycle management hits privacy hard. Verifiers must assume compromised keys or stale caches could cause irreversible harm.</p>
+</section>
+<section id="compliance-with-un-guidelines-and-regional-data-laws" class="level3">
+<h3 class="anchored" data-anchor-id="compliance-with-un-guidelines-and-regional-data-laws">Compliance with UN Guidelines and Regional Data Laws</h3>
+<p>Optimization techniques need to map to compliance: - <strong>DNS DIDs + Edge Caching</strong> → Reduces cross-border data transit, lowering interception risk. Aligns with UNICEF sovereignty recs. - <strong>Parallel Verification Pipelines</strong> → Ensures timely delivery, supporting rights to health/education without delay. - <strong>StatusList2021 Deltas</strong> → Minimizes data collection, satisfying GDPR minimization. - <strong>Hybrid Cryptography</strong> → Balances privacy/performance, meeting tech and legal standards.</p>
+<p>Agencies should publish verification architecture docs as open-source references. Transparency builds trust and enables audits. As noted in <em>Architecting the Minor-Centric DVC Ecosystem: A Technical Survey of Standards, Privacy Mechanisms, and Governance Frameworks — A technical survey on W3C standards, privacy-preserving cryptography, and governance frameworks for secure, minor-centric decentralized identity systems (url: posts/2024-05-04-architecting-the-minor-centric-dvc-ecosystem-a-technical-survey-of-standards-privacy-mechanisms-and-governance-frameworks/)</em>, open standards and open-source implementations aren’t optional; they’re foundational to equitable digital public infrastructure.</p>
+</section>
+</section>
+<section id="conclusion-actionable-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion-actionable-takeaways">Conclusion &amp; Actionable Takeaways</h2>
+<p>Building verifier systems for minor credential networks takes more than raw compute power. It demands architectural discipline, policy alignment, and a real commitment to child rights. By leveraging DNS-based DID resolution, edge caching, parallel pipelines, and bandwidth-efficient proof validation, governments can hit sub-200ms verification times without compromising privacy, security, or interoperability.</p>
+<p>Below is a practical reference table for policymakers, architects, and implementation teams:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 15%">
+<col style="width: 24%">
+<col style="width: 19%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Optimization Technique</th>
+<th>Primary Benefit</th>
+<th>Implementation Complexity</th>
+<th>Compliance Alignment</th>
+<th>Recommended Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DNS-Based DID Resolution</td>
+<td>Sub-50ms resolution, native caching</td>
+<td>Low (leverages existing DNS)</td>
+<td>High (open standards, transparent)</td>
+<td>National health/education registries</td>
+</tr>
+<tr class="even">
+<td>Edge Caching with ETags</td>
+<td>60–80% origin load reduction</td>
+<td>Medium (requires cache policy design)</td>
+<td>High (reduces data transit)</td>
+<td>High-throughput verifier endpoints</td>
+</tr>
+<tr class="odd">
+<td>StatusList2021 Deltas</td>
+<td>Byte-level revocation updates</td>
+<td>Medium (requires bitmap management)</td>
+<td>Very High (data minimization)</td>
+<td>Bulk credential ecosystems</td>
+</tr>
+<tr class="even">
+<td>Parallel Verification Engine</td>
+<td>40–60% latency reduction</td>
+<td>High (requires async architecture)</td>
+<td>Medium (needs fallback design)</td>
+<td>Multi-credential presentation flows</td>
+</tr>
+<tr class="odd">
+<td>Hybrid Cryptography Suite</td>
+<td>Balances privacy &amp; performance</td>
+<td>Medium (requires benchmarking)</td>
+<td>High (supports selective disclosure)</td>
+<td>Sensitive attribute verification</td>
+</tr>
+</tbody>
+</table>
+<p>When planning <strong>verifier-side optimization for minor credential networks</strong>, start with policy constraints, map tech choices to interoperability layers, and validate performance against real device profiles. Open standards, open-source tooling, and transparent docs should anchor every decision.</p>
+<p>The future of child-centric digital identity isn’t about choosing between speed and privacy, decentralization and accountability, or innovation and compliance. With thoughtful architecture and rights-by-design principles, we can build verification systems that are fast enough to serve millions, secure enough to protect the vulnerable, and open enough to evolve with the children they serve.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/merlos\.github\.io\/dvc4c\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

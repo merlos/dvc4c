@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-05-05">
+<meta name="keywords" content="OID4VC implementation, minor digital identity, guardian-assisted authorization, dynamic scope negotiation, secure token exchange, verifiable credentials for children, child-centric digital ID, zero-knowledge age proofs, government identity systems, privacy-preserving authentication">
+<meta name="description" content="Explore OID4VC implementation for minor identities, covering guardian-assisted authorization, dynamic scope negotiation, and secure token exchange for privacy-preserving digital ID systems.">
+
+<title>OID4VC Implementation for Minor Identities: Guardian-Assisted Authorization Flows, Dynamic Scope Negotiation, and Secure Token Exchange Patterns – Digital Verifiable Credentials for Children</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-74066ca329e1ac19c53faf31dafc0aff.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Digital Verifiable Credentials for Children</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-challenge-of-minor-identities-in-oid4vc-authorization" id="toc-the-challenge-of-minor-identities-in-oid4vc-authorization" class="nav-link active" data-scroll-target="#the-challenge-of-minor-identities-in-oid4vc-authorization">The Challenge of Minor Identities in OID4VC Authorization</a></li>
+  <li><a href="#guardian-assisted-authorization-flows" id="toc-guardian-assisted-authorization-flows" class="nav-link" data-scroll-target="#guardian-assisted-authorization-flows">Guardian-Assisted Authorization Flows</a>
+  <ul class="collapse">
+  <li><a href="#the-delegation-handshake" id="toc-the-delegation-handshake" class="nav-link" data-scroll-target="#the-delegation-handshake">The Delegation Handshake</a></li>
+  <li><a href="#handling-embedded-guardian-consent" id="toc-handling-embedded-guardian-consent" class="nav-link" data-scroll-target="#handling-embedded-guardian-consent">Handling Embedded Guardian Consent</a></li>
+  </ul></li>
+  <li><a href="#dynamic-scope-negotiation-driven-by-age-attributes" id="toc-dynamic-scope-negotiation-driven-by-age-attributes" class="nav-link" data-scroll-target="#dynamic-scope-negotiation-driven-by-age-attributes">Dynamic Scope Negotiation Driven by Age Attributes</a>
+  <ul class="collapse">
+  <li><a href="#age-gating-scopes-with-zero-knowledge-proofs" id="toc-age-gating-scopes-with-zero-knowledge-proofs" class="nav-link" data-scroll-target="#age-gating-scopes-with-zero-knowledge-proofs">Age-Gating Scopes with Zero-Knowledge Proofs</a></li>
+  <li><a href="#optimizing-scope-negotiation-for-low-bandwidth-environments" id="toc-optimizing-scope-negotiation-for-low-bandwidth-environments" class="nav-link" data-scroll-target="#optimizing-scope-negotiation-for-low-bandwidth-environments">Optimizing Scope Negotiation for Low-Bandwidth Environments</a></li>
+  </ul></li>
+  <li><a href="#secure-token-exchange-patterns-for-minors" id="toc-secure-token-exchange-patterns-for-minors" class="nav-link" data-scroll-target="#secure-token-exchange-patterns-for-minors">Secure Token Exchange Patterns for Minors</a>
+  <ul class="collapse">
+  <li><a href="#token-binding-and-rotation" id="toc-token-binding-and-rotation" class="nav-link" data-scroll-target="#token-binding-and-rotation">Token Binding and Rotation</a></li>
+  <li><a href="#exchange-flows-for-cross-sector-data" id="toc-exchange-flows-for-cross-sector-data" class="nav-link" data-scroll-target="#exchange-flows-for-cross-sector-data">Exchange Flows for Cross-Sector Data</a></li>
+  </ul></li>
+  <li><a href="#embedding-guardian-consent-in-authorization-requests" id="toc-embedding-guardian-consent-in-authorization-requests" class="nav-link" data-scroll-target="#embedding-guardian-consent-in-authorization-requests">Embedding Guardian Consent in Authorization Requests</a>
+  <ul class="collapse">
+  <li><a href="#sequence-diagram-of-the-handshake" id="toc-sequence-diagram-of-the-handshake" class="nav-link" data-scroll-target="#sequence-diagram-of-the-handshake">Sequence Diagram of the Handshake</a></li>
+  <li><a href="#privacy-constraints-and-data-minimization" id="toc-privacy-constraints-and-data-minimization" class="nav-link" data-scroll-target="#privacy-constraints-and-data-minimization">Privacy Constraints and Data Minimization</a></li>
+  </ul></li>
+  <li><a href="#optimizing-the-handshake-for-low-resource-settings" id="toc-optimizing-the-handshake-for-low-resource-settings" class="nav-link" data-scroll-target="#optimizing-the-handshake-for-low-resource-settings">Optimizing the Handshake for Low-Resource Settings</a>
+  <ul class="collapse">
+  <li><a href="#lightweight-cryptography-and-protocol-efficiency" id="toc-lightweight-cryptography-and-protocol-efficiency" class="nav-link" data-scroll-target="#lightweight-cryptography-and-protocol-efficiency">Lightweight Cryptography and Protocol Efficiency</a></li>
+  <li><a href="#offline-capabilities" id="toc-offline-capabilities" class="nav-link" data-scroll-target="#offline-capabilities">Offline Capabilities</a></li>
+  </ul></li>
+  <li><a href="#interoperability-across-government-sectors" id="toc-interoperability-across-government-sectors" class="nav-link" data-scroll-target="#interoperability-across-government-sectors">Interoperability Across Government Sectors</a>
+  <ul class="collapse">
+  <li><a href="#the-four-layers-of-interoperability" id="toc-the-four-layers-of-interoperability" class="nav-link" data-scroll-target="#the-four-layers-of-interoperability">The Four Layers of Interoperability</a></li>
+  <li><a href="#dynamic-credential-updates" id="toc-dynamic-credential-updates" class="nav-link" data-scroll-target="#dynamic-credential-updates">Dynamic Credential Updates</a></li>
+  </ul></li>
+  <li><a href="#human-rights-privacy-and-security-considerations" id="toc-human-rights-privacy-and-security-considerations" class="nav-link" data-scroll-target="#human-rights-privacy-and-security-considerations">Human Rights, Privacy, and Security Considerations</a>
+  <ul class="collapse">
+  <li><a href="#data-protection-by-design" id="toc-data-protection-by-design" class="nav-link" data-scroll-target="#data-protection-by-design">Data Protection by Design</a></li>
+  <li><a href="#cybersecurity-threats" id="toc-cybersecurity-threats" class="nav-link" data-scroll-target="#cybersecurity-threats">Cybersecurity Threats</a></li>
+  <li><a href="#open-standards-and-open-source" id="toc-open-standards-and-open-source" class="nav-link" data-scroll-target="#open-standards-and-open-source">Open Standards and Open Source</a></li>
+  </ul></li>
+  <li><a href="#actionable-takeaways-for-implementation" id="toc-actionable-takeaways-for-implementation" class="nav-link" data-scroll-target="#actionable-takeaways-for-implementation">Actionable Takeaways for Implementation</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">OID4VC Implementation for Minor Identities: Guardian-Assisted Authorization Flows, Dynamic Scope Negotiation, and Secure Token Exchange Patterns</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Digital Identity</div>
+    <div class="quarto-category">Cybersecurity</div>
+    <div class="quarto-category">Public Sector Technology</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Explore OID4VC implementation for minor identities, covering guardian-assisted authorization, dynamic scope negotiation, and secure token exchange for privacy-preserving digital ID systems.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ian Merlos </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 5, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+<div>
+  <div class="keywords">
+    <div class="block-title">Keywords</div>
+    <p>OID4VC implementation, minor digital identity, guardian-assisted authorization, dynamic scope negotiation, secure token exchange, verifiable credentials for children, child-centric digital ID, zero-knowledge age proofs, government identity systems, privacy-preserving authentication</p>
+  </div>
+</div>
+
+</header>
+
+
+<p>So, how do we roll out <strong>OID4VC minor identities</strong> in a way that actually respects how kids grow and change, gives guardians the tools they need without wiping out the child’s own digital voice, and still hits the strict privacy bars set by international human rights frameworks? That’s the sweet spot where technical architecture runs headfirst into child protection policy. For governments and development specialists, the hard part isn’t just issuing Verifiable Credentials (VCs); it’s engineering the authorization layer that controls <em>how</em> those credentials are shown, <em>who</em> gets to say “yes” to sharing them, and <em>what</em> data slips out depending on the child’s age and what service they’re accessing.</p>
+<p>As we track a kid’s digital journey—from pre-natal health records to birth registration, through school and social support, and eventually into the workforce—we’ve got to make sure identity systems don’t become roadblocks to getting services. The OpenID for Verifiable Credentials (OID4VC) framework gives us a solid, open-standard foundation, but applying it to minors means we need some specialized moves: <strong>guardian-assisted authorization flows</strong>, <strong>dynamic scope negotiation</strong>, and <strong>secure token exchange</strong> mechanisms that flex as the child grows.</p>
+<p>In this post, we’re breaking down those patterns to give you a technical and policy-aligned roadmap for building <strong>verifiable credentials government services children</strong> can actually rely on. We’re talking interoperability, data minimization, and keeping the best interests of the child front and center.</p>
+<section id="the-challenge-of-minor-identities-in-oid4vc-authorization" class="level2">
+<h2 class="anchored" data-anchor-id="the-challenge-of-minor-identities-in-oid4vc-authorization">The Challenge of Minor Identities in OID4VC Authorization</h2>
+<p>Here’s the rub: traditional OAuth 2.0 and OpenID Connect flows are built on a shaky assumption when it comes to kids—that the resource owner has full legal capacity to consent. When the resource owner is a minor, that assumption just doesn’t hold water. Sure, legal guardians or authorized reps usually hold the pen for consent on behalf of the child, but the kid’s right to privacy and data protection remains non-negotiable. As we move from the Civil Registry handing out birth credentials to schools checking enrollment, the system has to juggle a complex triad: the Child (holder), the Guardian (delegate), and the Verifier (government service).</p>
+<p>From an interoperability standpoint, we’ve got a four-layer puzzle to solve:</p>
+<ol type="1">
+<li><strong>Technical:</strong> We need protocol extensions for guardian delegation and age-based scope gating.</li>
+<li><strong>Semantic:</strong> Schemas have to define relationships (think <code>GuardianOf</code> or <code>AuthorizedForScope</code>) and age attributes without unnecessarily spilling raw dates of birth.</li>
+<li><strong>Organizational:</strong> Workflows between the Ministry of Health, Civil Registry, and Education sectors need to respect data sovereignty.</li>
+<li><strong>Policy:</strong> We’re looking at compliance with the UN Convention on the Rights of the Child (CRC), GDPR-K, and local data protection laws.</li>
+</ol>
+<p>As we’ve seen in our standards survey, the architecture has to be minor-centric, not just a bolt-on afterthought to adult identity systems. If you want a deeper dive into the foundational governance frameworks, check out <a href="posts/2026-05-04-architecting-the-minor-centric-dvc-ecosystem-a-technical-survey-of-standards-privacy-mechanisms-and-governance-frameworks/">Architecting the Minor-Centric DVC Ecosystem: A Technical Survey of Standards, Privacy Mechanisms, and Governance Frameworks</a>.</p>
+</section>
+<section id="guardian-assisted-authorization-flows" class="level2">
+<h2 class="anchored" data-anchor-id="guardian-assisted-authorization-flows">Guardian-Assisted Authorization Flows</h2>
+<p>To make <strong>guardian-assisted authorization flows</strong> work, we need to extend the OID4VC authorization request to include delegation parameters. The golden rule here? “Delegated authority with a clear paper trail.” Guardians shouldn’t have a master key to the child’s wallet; instead, they should approve specific presentation requests or hold specific scopes based on policy rules.</p>
+<section id="the-delegation-handshake" class="level3">
+<h3 class="anchored" data-anchor-id="the-delegation-handshake">The Delegation Handshake</h3>
+<p>Picture a typical flow: a minor is trying to access a government service, say, applying for a social protection benefit. The authorization request kicks off from the child’s wallet, but it triggers a consent ping to the guardian’s device. You can handle this via a callback mechanism or a shared session context managed by the authorization server.</p>
+<p>Take a look at this OID4VC authorization request structure, embedded with guardian consent parameters:</p>
+<pre class="http"><code>GET /authorize?
+  client_id=urn:gov:services:social-protection&amp;
+  response_type=id_token&amp;
+  scope=openid social:benefit_eligibility&amp;
+  request_uri=urn:oid4vc:request:minors:social&amp;
+  guardian_consent_required=true&amp;
+  guardian_did=did:gov:guardian:12345&amp;
+  consent_callback=wallet://guardian/consent&amp;
+  state=nonce_abc123&amp;
+  nonce=xyz789</code></pre>
+<p>When you see <code>guardian_consent_required=true</code>, that’s the Authorization Server (AS) flagging that it needs to validate the <code>guardian_did</code> has given the green light for this specific scope tied to the child’s DID. The AS checks the delegation registry to confirm the guardian is actually authorized for the <code>social:benefit_eligibility</code> scope.</p>
+</section>
+<section id="handling-embedded-guardian-consent" class="level3">
+<h3 class="anchored" data-anchor-id="handling-embedded-guardian-consent">Handling Embedded Guardian Consent</h3>
+<p>To keep the handshake from dragging, we can embed pre-authorized consent for routine stuff. For example, a guardian might grant “standing consent” for health data to flow between the Ministry of Health and the Civil Registry during birth registration. That cuts down friction while keeping security tight.</p>
+<p>That said, for sensitive scopes, active consent is a must. If the guardian hasn’t approved the request within a set window, the AS should throw a <code>403 Forbidden</code> or a specific <code>error=guardian_consent_pending</code>. This stops bad actors from spamming consent requests to harass guardians (which would basically be a denial-of-service attack on the human element).</p>
+<p>For the underlying trust mechanisms that make this delegation possible—including how to bootstrap the link between the child’s DID and the guardian’s DID—head over to <a href="posts/2026-05-03-bootstrapping-trust-technical-foundations-and-architectural-patterns-for-digital-verifiable-credentials-in-minor-centric-ecosystems/">Bootstrapping Trust: Technical Foundations and Architectural Patterns for Digital Verifiable Credentials in Minor-Centric Ecosystems</a>.</p>
+</section>
+</section>
+<section id="dynamic-scope-negotiation-driven-by-age-attributes" class="level2">
+<h2 class="anchored" data-anchor-id="dynamic-scope-negotiation-driven-by-age-attributes">Dynamic Scope Negotiation Driven by Age Attributes</h2>
+<p>Here’s where OID4VC really shines for minors: <strong>dynamic scope negotiation</strong>. Think about it: a 5-year-old showing a credential for a vaccination check shouldn’t have the same authorization scope as a 16-year-old applying for a driver’s license. The system needs to adjust available scopes on the fly based on age and legal capacity, without necessarily handing the verifier the exact date of birth.</p>
+<section id="age-gating-scopes-with-zero-knowledge-proofs" class="level3">
+<h3 class="anchored" data-anchor-id="age-gating-scopes-with-zero-knowledge-proofs">Age-Gating Scopes with Zero-Knowledge Proofs</h3>
+<p>We can handle age-gating using zero-knowledge proofs (ZKPs) inside the OID4VC flow. The child’s wallet can prove the holder’s age falls within the required range for a specific scope, and the verifier only learns that the condition is met—nothing more.</p>
+<p>For instance, the authorization server can set up scope policies like this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"scope_policies"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"scope"</span><span class="fu">:</span> <span class="st">"health:vaccine_card"</span><span class="fu">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"age_requirement"</span><span class="fu">:</span> <span class="st">"any"</span><span class="fu">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"guardian_consent"</span><span class="fu">:</span> <span class="st">"not_required"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"scope"</span><span class="fu">:</span> <span class="st">"education:school_enrollment"</span><span class="fu">,</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"age_requirement"</span><span class="fu">:</span> <span class="st">"&gt;= 5"</span><span class="fu">,</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"guardian_consent"</span><span class="fu">:</span> <span class="st">"required_if_age &lt; 13"</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"scope"</span><span class="fu">:</span> <span class="st">"social:financial_independence"</span><span class="fu">,</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"age_requirement"</span><span class="fu">:</span> <span class="st">"&gt;= 18"</span><span class="fu">,</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"guardian_consent"</span><span class="fu">:</span> <span class="st">"not_applicable"</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>When the child asks for <code>scope=education:school_enrollment</code>, the wallet computes a ZKP proving <code>age &gt;= 5</code>. If the kid is 10, the system also triggers the guardian consent flow because <code>age &lt; 13</code>. But if the kid is 15, the scope gets granted without guardian intervention, respecting that growing autonomy.</p>
+<p>Under the hood, this relies heavily on crypto primitives like BBS+ signatures and range proofs. We dug into how to implement these proofs in <a href="posts/2026-05-05-cryptographic-age-proofs-implementing-bbs-signatures-and-range-proofs-for-privacy-preserving-minor-verification/">Cryptographic Age-Proofs: Implementing BBS+ Signatures and Range Proofs for Privacy-Preserving Minor Verification</a>. By using these techniques, we make sure the verifier can’t infer the child’s exact age beyond the necessary range, sticking strictly to data minimization.</p>
+</section>
+<section id="optimizing-scope-negotiation-for-low-bandwidth-environments" class="level3">
+<h3 class="anchored" data-anchor-id="optimizing-scope-negotiation-for-low-bandwidth-environments">Optimizing Scope Negotiation for Low-Bandwidth Environments</h3>
+<p>Let’s be real: in many development contexts, bandwidth is precious. Dynamic scope negotiation has to be lightweight. We can optimize this by:</p>
+<ol type="1">
+<li><strong>Pre-fetching Policies:</strong> The wallet caches scope policies from the government’s policy endpoint, cutting down on round-trips.</li>
+<li><strong>Compressed Proofs:</strong> Using compact ZKP representations that fit neatly inside standard JWT payloads.</li>
+<li><strong>Edge Caching:</strong> Deploying policy caches at the edge to slash latency.</li>
+</ol>
+<p>For more strategies on optimizing the verifier side and cutting latency in minor credential networks, see <a href="posts/2026-05-05-verifier-side-optimization-for-minor-credential-networks-dns-based-did-resolution-edge-caching-strategies-and-low-latency-status-propagation/">Verifier-Side Optimization for Minor Credential Networks: DNS-Based DID Resolution, Edge Caching Strategies, and Low-Latency Status Propagation</a>.</p>
+</section>
+</section>
+<section id="secure-token-exchange-patterns-for-minors" class="level2">
+<h2 class="anchored" data-anchor-id="secure-token-exchange-patterns-for-minors">Secure Token Exchange Patterns for Minors</h2>
+<p>Tokens are the lifeblood of OID4VC security. For minors, we need to implement <strong>secure token exchange patterns</strong> that stop token theft, misuse, and unauthorized delegation in their tracks. The child’s wallet might hold long-lived tokens, while the guardian could hold short-lived delegation tokens.</p>
+<section id="token-binding-and-rotation" class="level3">
+<h3 class="anchored" data-anchor-id="token-binding-and-rotation">Token Binding and Rotation</h3>
+<p>We can’t let session hijacking happen, so token binding is non-negotiable. Tokens issued to minor identities must be bound to the device or app using Token Binding. That way, even if a token gets intercepted, an attacker can’t reuse it without the binding credentials.</p>
+<p>On top of that, token rotation is critical. Since a child’s digital identity spans a long lifecycle (birth to adulthood), keys and tokens need regular rotation without disrupting service access. We can set up automated rotation policies where the wallet refreshes tokens based on risk signals or set time intervals.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"token_management"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"rotation_interval_days"</span><span class="fu">:</span> <span class="dv">90</span><span class="fu">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"risk_based_rotation"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"token_binding"</span><span class="fu">:</span> <span class="st">"required"</span><span class="fu">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"guardian_token_expiry_seconds"</span><span class="fu">:</span> <span class="dv">3600</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Guardian tokens? Keep those short-lived and tightly scoped to the authorization actions they’re allowed to perform. This limits the blast radius if a guardian’s device gets compromised.</p>
+<p>For a comprehensive guide on managing keys over the long haul—including threshold cryptography and social recovery patterns to keep the child’s identity accessible even if devices go missing—refer to <a href="posts/2026-05-05-resilient-key-management-for-minor-identities-threshold-cryptography-social-recovery-patterns-and-long-term-did-sustainability/">Resilient Key Management for Minor Identities: Threshold Cryptography, Social Recovery Patterns, and Long-Term DID Sustainability</a>.</p>
+</section>
+<section id="exchange-flows-for-cross-sector-data" class="level3">
+<h3 class="anchored" data-anchor-id="exchange-flows-for-cross-sector-data">Exchange Flows for Cross-Sector Data</h3>
+<p>In government ecosystems, tokens often need to hop between sectors. Maybe a token from the Health Ministry needs to be exchanged for a credential presentation to the Education Ministry. We can adapt the OAuth 2.0 Token Exchange (RFC 8693) profile for this.</p>
+<p>Privacy has to be preserved during the exchange. The verifier should only get the minimal claims needed for the service. We can use the <code>audience</code> parameter to lock down token usage and ensure tokens aren’t reusable in unauthorized contexts.</p>
+</section>
+</section>
+<section id="embedding-guardian-consent-in-authorization-requests" class="level2">
+<h2 class="anchored" data-anchor-id="embedding-guardian-consent-in-authorization-requests">Embedding Guardian Consent in Authorization Requests</h2>
+<p>If we want to keep the user experience smooth without sacrificing security, embedding guardian consent directly into the authorization request is the way to go. This cuts down on interactions and gives us a clear audit trail.</p>
+<section id="sequence-diagram-of-the-handshake" class="level3">
+<h3 class="anchored" data-anchor-id="sequence-diagram-of-the-handshake">Sequence Diagram of the Handshake</h3>
+<p>Here’s how the dance goes down for a guardian-assisted OID4VC flow:</p>
+<ol type="1">
+<li><strong>Child Wallet</strong> starts the flow by sending an OID4VC authorization request to the <strong>Government Service (Verifier)</strong>.</li>
+<li><strong>Verifier</strong> checks the request and sees if guardian consent is needed based on scope and the child’s age policy.</li>
+<li>If consent is required, the <strong>Verifier</strong> redirects the <strong>Child Wallet</strong> to the <strong>Authorization Server (AS)</strong> with a consent challenge.</li>
+<li><strong>AS</strong> looks up the associated <strong>Guardian DID</strong> in the delegation registry and pushes a consent notification to the <strong>Guardian Wallet</strong>.</li>
+<li><strong>Guardian Wallet</strong> shows the consent request, laying out the scope, purpose, and data minimization details.</li>
+<li><strong>Guardian</strong> approves the request, signing a consent artifact with their key.</li>
+<li><strong>Guardian Wallet</strong> sends the signed consent back to the <strong>AS</strong> (or directly to the <strong>Child Wallet</strong> to forward along).</li>
+<li><strong>Child Wallet</strong> includes the consent proof in the final presentation to the <strong>Verifier</strong>.</li>
+<li><strong>Verifier</strong> validates the consent proof and hands over the credential or access token.</li>
+</ol>
+<p>The beauty of this flow is that consent is explicit, auditable, and tied to the specific transaction. It also supports asynchronous consent—so a guardian can approve the request later, which is a lifesaver in low-connectivity areas.</p>
+</section>
+<section id="privacy-constraints-and-data-minimization" class="level3">
+<h3 class="anchored" data-anchor-id="privacy-constraints-and-data-minimization">Privacy Constraints and Data Minimization</h3>
+<p>Throughout this flow, privacy has to be paramount. Guardians shouldn’t see more data than they need to make a smart decision. The consent request should summarize the data elements being asked for, rather than dumping the full credential. For example:</p>
+<blockquote class="blockquote">
+<p>“Service X requests proof of vaccination status. No personal details will be shared.”</p>
+</blockquote>
+<p>This lines up perfectly with data minimization and builds trust with both guardians and kids. And as children grow, the system should evolve to let them view and manage their own consent history, helping foster digital literacy and independence.</p>
+</section>
+</section>
+<section id="optimizing-the-handshake-for-low-resource-settings" class="level2">
+<h2 class="anchored" data-anchor-id="optimizing-the-handshake-for-low-resource-settings">Optimizing the Handshake for Low-Resource Settings</h2>
+<p>When you’re dealing with 2G networks, spotty power, and older devices, optimization isn’t optional—it’s survival. Optimizing the OID4VC handshake is essential for inclusivity.</p>
+<section id="lightweight-cryptography-and-protocol-efficiency" class="level3">
+<h3 class="anchored" data-anchor-id="lightweight-cryptography-and-protocol-efficiency">Lightweight Cryptography and Protocol Efficiency</h3>
+<p>We can cut down computational and bandwidth overhead by:</p>
+<ol type="1">
+<li><strong>Using Compact JWTs:</strong> Keeping headers and payloads as small as possible.</li>
+<li><strong>Leveraging DNS-Based DID Resolution:</strong> Resolving DIDs via DNS instead of hauling heavy DID documents over HTTP.</li>
+<li><strong>Implementing Bandwidth-Efficient Protocols:</strong> Using QUIC or optimized HTTP/2 streams to speed up handshakes.</li>
+</ol>
+<p>For detailed techniques on optimizing presentation exchange in these environments, see <a href="posts/2026-05-05-optimizing-verifiable-presentation-exchange-for-minors-lightweight-cryptography-bandwidth-efficient-protocols-and-edge-wallet-deployment/">Optimizing Verifiable Presentation Exchange for Minors: Lightweight Cryptography, Bandwidth-Efficient Protocols, and Edge Wallet Deployment</a>.</p>
+</section>
+<section id="offline-capabilities" class="level3">
+<h3 class="anchored" data-anchor-id="offline-capabilities">Offline Capabilities</h3>
+<p>Guardians and kids won’t always have a signal. The wallet needs to support offline storage for credentials and consent artifacts. Once connectivity returns, the wallet can sync consent approvals and present credentials. This calls for solid synchronization protocols and smart conflict resolution strategies.</p>
+</section>
+</section>
+<section id="interoperability-across-government-sectors" class="level2">
+<h2 class="anchored" data-anchor-id="interoperability-across-government-sectors">Interoperability Across Government Sectors</h2>
+<p>A kid’s digital identity doesn’t live in a silo; it spans health, education, social policy, and civil registration. Rolling out OID4VC for minors demands interoperability across all these sectors.</p>
+<section id="the-four-layers-of-interoperability" class="level3">
+<h3 class="anchored" data-anchor-id="the-four-layers-of-interoperability">The Four Layers of Interoperability</h3>
+<ol type="1">
+<li><strong>Technical:</strong> OID4VC has to play nice with existing government APIs and legacy systems. We can use adapters to bridge OID4VC with SOAP or REST endpoints used by civil registries.</li>
+<li><strong>Semantic:</strong> W3C Verifiable Credentials and JSON-LD give us a common data model. Schemas should align across sectors. For instance, the <code>Person</code> schema in health records needs to map cleanly to the <code>Person</code> schema in education records.</li>
+<li><strong>Organizational:</strong> Ministries need data sharing agreements and governance bodies in place. The flow from health to civil registry is critical for birth registration.</li>
+<li><strong>Policy:</strong> Harmonized data protection policies ensure privacy standards stay consistent across the board.</li>
+</ol>
+<p>For a technical guide on linking health records to civil registration for birth credential issuance, check out <a href="posts/2026-05-04-orchestrating-the-health-to-crvs-continuum-secure-interoperability-patterns-and-event-driven-credential-issuance-for-minor-digital-identity/">Orchestrating the Health-to-CRVS Continuum: Secure Interoperability Patterns and Event-Driven Credential Issuance for Minor Digital Identity</a>.</p>
+<p>Also, issuing birth credentials requires careful schema design and selective disclosure. Refer to <a href="posts/2026-05-03-civil-registry-integration-for-minor-identity-technical-workflows-w3c-schema-design-and-selective-disclosure-in-birth-credential-issuance/">Civil Registry Integration for Minor Identity: Technical Workflows, W3C Schema Design, and Selective Disclosure in Birth Credential Issuance</a> for best practices.</p>
+</section>
+<section id="dynamic-credential-updates" class="level3">
+<h3 class="anchored" data-anchor-id="dynamic-credential-updates">Dynamic Credential Updates</h3>
+<p>Credentials aren’t set in stone. As the child grows, they need updates—vaccination records change, school records pile up. The system must support dynamic updates without re-issuing the whole credential set every time. Delta updates and versioning strategies can cut overhead and keep the child’s wallet current.</p>
+<p>For mechanisms to handle secure updates and consent evolution, see <a href="posts/2026-05-04-engineering-dynamic-verifiable-credentials-for-minors-secure-update-mechanisms-versioning-strategies-and-automated-consent-evolution-workflows/">Engineering Dynamic Verifiable Credentials for Minors: Secure Update Mechanisms, Versioning Strategies, and Automated Consent Evolution Workflows</a>.</p>
+</section>
+</section>
+<section id="human-rights-privacy-and-security-considerations" class="level2">
+<h2 class="anchored" data-anchor-id="human-rights-privacy-and-security-considerations">Human Rights, Privacy, and Security Considerations</h2>
+<p>Building digital ID systems for kids comes with a heavy responsibility. We’ve got to make sure the tech serves the child’s rights and doesn’t expose them to harm.</p>
+<section id="data-protection-by-design" class="level3">
+<h3 class="anchored" data-anchor-id="data-protection-by-design">Data Protection by Design</h3>
+<p>Privacy has to be baked in from day one. This means:</p>
+<ul>
+<li><strong>End-to-End Encryption:</strong> Credentials and tokens must be encrypted in transit and at rest.</li>
+<li><strong>Access Controls:</strong> Strict role-based access control (RBAC) for government staff touching identity systems.</li>
+<li><strong>Audit Logs:</strong> Immutable logs of all consent and data access events, accessible to guardians and, as the child matures, to the child themselves.</li>
+</ul>
+</section>
+<section id="cybersecurity-threats" class="level3">
+<h3 class="anchored" data-anchor-id="cybersecurity-threats">Cybersecurity Threats</h3>
+<p>Kids are often targets of cyber threats. Systems need to guard against:</p>
+<ul>
+<li><strong>Phishing:</strong> Guardians need education to spot fake consent requests.</li>
+<li><strong>Device Theft:</strong> Token binding and biometric auth on devices help reduce risk.</li>
+<li><strong>Profiling:</strong> We must prevent data aggregation across services that builds profiles of children. Dynamic scope negotiation and ZKPs help here by limiting what gets disclosed.</li>
+</ul>
+</section>
+<section id="open-standards-and-open-source" class="level3">
+<h3 class="anchored" data-anchor-id="open-standards-and-open-source">Open Standards and Open Source</h3>
+<p>We’re big fans of open standards and open-source solutions. Proprietary systems lead to vendor lock-in and can wreck interoperability. Open standards like OID4VC, W3C VCs, and DID methods ensure governments can switch providers and plug into global systems. Open-source implementations let the community review the code, boosting security and trust.</p>
+</section>
+</section>
+<section id="actionable-takeaways-for-implementation" class="level2">
+<h2 class="anchored" data-anchor-id="actionable-takeaways-for-implementation">Actionable Takeaways for Implementation</h2>
+<p>To wrap things up, here are the key takeaways for policymakers and technical teams rolling out OID4VC for minor identities:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Mechanism</th>
+<th style="text-align: left;">Benefit</th>
+<th style="text-align: left;">Implementation Tip</th>
+<th style="text-align: left;">Risk Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Guardian-Assisted Flows</strong></td>
+<td style="text-align: left;">Enables access for minors lacking full capacity while keeping a clear audit trail.</td>
+<td style="text-align: left;">Use <code>guardian_consent_required</code> parameter and callback URLs for asynchronous approval.</td>
+<td style="text-align: left;">Validate guardian delegation registry; enforce short token expiry for guardians.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Dynamic Scope Negotiation</strong></td>
+<td style="text-align: left;">Adapts data disclosure to age and service context, respecting evolving autonomy.</td>
+<td style="text-align: left;">Implement age-gating policies and use ZKPs for age range proofs.</td>
+<td style="text-align: left;">Ensure ZKP implementations are side-channel resistant; cache policies to reduce latency.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Secure Token Exchange</strong></td>
+<td style="text-align: left;">Protects tokens from misuse and enables cross-sector interoperability.</td>
+<td style="text-align: left;">Enforce token binding and rotate tokens based on risk signals.</td>
+<td style="text-align: left;">Use RFC 8693 with strict audience restrictions; monitor for anomalous exchange patterns.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Optimized Handshakes</strong></td>
+<td style="text-align: left;">Ensures inclusivity in low-resource settings.</td>
+<td style="text-align: left;">Use compact JWTs, DNS-based DID resolution, and edge caching.</td>
+<td style="text-align: left;">Test on 2G networks; implement offline fallbacks for critical services.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Interoperability Layers</strong></td>
+<td style="text-align: left;">Breaks down silos between health, education, and civil registry.</td>
+<td style="text-align: left;">Align JSON-LD schemas and establish data sharing agreements.</td>
+<td style="text-align: left;">Regularly review semantic mappings; conduct interoperability testing across ministries.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Getting <strong>OID4VC minor identities</strong> right—with <strong>guardian-assisted authorization flows</strong>, <strong>dynamic scope negotiation</strong>, and <strong>secure token exchange patterns</strong>—isn’t just a tech problem; it’s a promise to build digital infrastructure that respects the rights, privacy, and growing autonomy of children. By leveraging open standards, privacy-preserving cryptography, and interoperable architectures, governments can deliver services that are secure, inclusive, and truly child-centric.</p>
+<p>As we weave these patterns through health, education, and social sectors, we create a seamless digital journey for every kid, from birth to adulthood. The future of digital identity for minors lies in systems that empower guardians to protect, children to participate, and governments to serve—without compromise. With rigorous adherence to human rights principles and solid technical design, we can make sure digital identity becomes a bridge to opportunity, leaving no child behind in the digital age. The path forward is clear: build with trust, design for privacy, and always keep the best interests of the child at the heart of our architecture.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/merlos\.github\.io\/dvc4c\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-05-05">
+<meta name="keywords" content="digital identity for children, resilient key management, threshold signature schemes, social recovery patterns, decentralized identifiers, minor identity sustainability, government digital ID, child rights protection, automated key rotation, W3C verifiable credentials">
+<meta name="description" content="Explore resilient key management for minor identities using threshold cryptography and social recovery. Ensure long-term DID sustainability for children.">
+
+<title>Resilient Key Management for Minor Identities: Threshold Cryptography, Social Recovery Patterns, and Long-Term DID Sustainability – Digital Verifiable Credentials for Children</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-74066ca329e1ac19c53faf31dafc0aff.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Digital Verifiable Credentials for Children</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-lost-key-crisis-in-child-identity-systems" id="toc-the-lost-key-crisis-in-child-identity-systems" class="nav-link active" data-scroll-target="#the-lost-key-crisis-in-child-identity-systems">The “Lost Key” Crisis in Child Identity Systems</a></li>
+  <li><a href="#the-developmental-lifecycle-why-static-keys-fail-children" id="toc-the-developmental-lifecycle-why-static-keys-fail-children" class="nav-link" data-scroll-target="#the-developmental-lifecycle-why-static-keys-fail-children">The Developmental Lifecycle: Why Static Keys Fail Children</a></li>
+  <li><a href="#threshold-cryptography-balancing-oversight-and-autonomy" id="toc-threshold-cryptography-balancing-oversight-and-autonomy" class="nav-link" data-scroll-target="#threshold-cryptography-balancing-oversight-and-autonomy">Threshold Cryptography: Balancing Oversight and Autonomy</a>
+  <ul class="collapse">
+  <li><a href="#how-it-works-for-minors" id="toc-how-it-works-for-minors" class="nav-link" data-scroll-target="#how-it-works-for-minors">How It Works for Minors</a></li>
+  <li><a href="#implementation-example-configurable-trust-policy" id="toc-implementation-example-configurable-trust-policy" class="nav-link" data-scroll-target="#implementation-example-configurable-trust-policy">Implementation Example: Configurable Trust Policy</a></li>
+  </ul></li>
+  <li><a href="#social-recovery-patterns-community-based-resilience" id="toc-social-recovery-patterns-community-based-resilience" class="nav-link" data-scroll-target="#social-recovery-patterns-community-based-resilience">Social Recovery Patterns: Community-Based Resilience</a>
+  <ul class="collapse">
+  <li><a href="#what-is-social-recovery" id="toc-what-is-social-recovery" class="nav-link" data-scroll-target="#what-is-social-recovery">What is Social Recovery?</a></li>
+  <li><a href="#workflow-recovering-a-lost-key" id="toc-workflow-recovering-a-lost-key" class="nav-link" data-scroll-target="#workflow-recovering-a-lost-key">Workflow: Recovering a Lost Key</a></li>
+  </ul></li>
+  <li><a href="#automated-key-rotation-and-did-longevity" id="toc-automated-key-rotation-and-did-longevity" class="nav-link" data-scroll-target="#automated-key-rotation-and-did-longevity">Automated Key Rotation and DID Longevity</a>
+  <ul class="collapse">
+  <li><a href="#the-role-of-did-methods" id="toc-the-role-of-did-methods" class="nav-link" data-scroll-target="#the-role-of-did-methods">The Role of DID Methods</a></li>
+  <li><a href="#code-snippet-did-document-with-rotation-policy" id="toc-code-snippet-did-document-with-rotation-policy" class="nav-link" data-scroll-target="#code-snippet-did-document-with-rotation-policy">Code Snippet: DID Document with Rotation Policy</a></li>
+  </ul></li>
+  <li><a href="#architectural-patterns-for-credential-continuity" id="toc-architectural-patterns-for-credential-continuity" class="nav-link" data-scroll-target="#architectural-patterns-for-credential-continuity">Architectural Patterns for Credential Continuity</a>
+  <ul class="collapse">
+  <li><a href="#technical-layer-open-standards-and-interoperability" id="toc-technical-layer-open-standards-and-interoperability" class="nav-link" data-scroll-target="#technical-layer-open-standards-and-interoperability">1. Technical Layer: Open Standards and Interoperability</a></li>
+  <li><a href="#semantic-layer-shared-schemas" id="toc-semantic-layer-shared-schemas" class="nav-link" data-scroll-target="#semantic-layer-shared-schemas">2. Semantic Layer: Shared Schemas</a></li>
+  <li><a href="#organizational-layer-government-workflows" id="toc-organizational-layer-government-workflows" class="nav-link" data-scroll-target="#organizational-layer-government-workflows">3. Organizational Layer: Government Workflows</a></li>
+  <li><a href="#policy-layer-legal-frameworks-and-rights" id="toc-policy-layer-legal-frameworks-and-rights" class="nav-link" data-scroll-target="#policy-layer-legal-frameworks-and-rights">4. Policy Layer: Legal Frameworks and Rights</a></li>
+  </ul></li>
+  <li><a href="#case-study-simulation-aminas-journey-from-birth-to-employment" id="toc-case-study-simulation-aminas-journey-from-birth-to-employment" class="nav-link" data-scroll-target="#case-study-simulation-aminas-journey-from-birth-to-employment">Case Study Simulation: Amina’s Journey from Birth to Employment</a>
+  <ul class="collapse">
+  <li><a href="#phase-1-birth-and-early-childhood-age-0-5" id="toc-phase-1-birth-and-early-childhood-age-0-5" class="nav-link" data-scroll-target="#phase-1-birth-and-early-childhood-age-0-5">Phase 1: Birth and Early Childhood (Age 0-5)</a></li>
+  <li><a href="#phase-2-school-enrollment-and-adolescence-age-6-15" id="toc-phase-2-school-enrollment-and-adolescence-age-6-15" class="nav-link" data-scroll-target="#phase-2-school-enrollment-and-adolescence-age-6-15">Phase 2: School Enrollment and Adolescence (Age 6-15)</a></li>
+  <li><a href="#phase-3-transition-to-majority-age-16-18" id="toc-phase-3-transition-to-majority-age-16-18" class="nav-link" data-scroll-target="#phase-3-transition-to-majority-age-16-18">Phase 3: Transition to Majority (Age 16-18)</a></li>
+  <li><a href="#phase-4-employment-and-full-autonomy-age-18" id="toc-phase-4-employment-and-full-autonomy-age-18" class="nav-link" data-scroll-target="#phase-4-employment-and-full-autonomy-age-18">Phase 4: Employment and Full Autonomy (Age 18+)</a></li>
+  </ul></li>
+  <li><a href="#risks-mitigations-and-human-rights-safeguards" id="toc-risks-mitigations-and-human-rights-safeguards" class="nav-link" data-scroll-target="#risks-mitigations-and-human-rights-safeguards">Risks, Mitigations, and Human Rights Safeguards</a></li>
+  <li><a href="#actionable-takeaways-for-policymakers-and-technologists" id="toc-actionable-takeaways-for-policymakers-and-technologists" class="nav-link" data-scroll-target="#actionable-takeaways-for-policymakers-and-technologists">Actionable Takeaways for Policymakers and Technologists</a>
+  <ul class="collapse">
+  <li><a href="#summary-table-key-technologies-and-their-role" id="toc-summary-table-key-technologies-and-their-role" class="nav-link" data-scroll-target="#summary-table-key-technologies-and-their-role">Summary Table: Key Technologies and Their Role</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Resilient Key Management for Minor Identities: Threshold Cryptography, Social Recovery Patterns, and Long-Term DID Sustainability</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Identity Management</div>
+    <div class="quarto-category">Cryptography</div>
+    <div class="quarto-category">Public Policy</div>
+    <div class="quarto-category">Development Technology</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Explore resilient key management for minor identities using threshold cryptography and social recovery. Ensure long-term DID sustainability for children.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ian Merlos </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 5, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+<div>
+  <div class="keywords">
+    <div class="block-title">Keywords</div>
+    <p>digital identity for children, resilient key management, threshold signature schemes, social recovery patterns, decentralized identifiers, minor identity sustainability, government digital ID, child rights protection, automated key rotation, W3C verifiable credentials</p>
+  </div>
+</div>
+
+</header>
+
+
+<section id="the-lost-key-crisis-in-child-identity-systems" class="level3">
+<h3 class="anchored" data-anchor-id="the-lost-key-crisis-in-child-identity-systems">The “Lost Key” Crisis in Child Identity Systems</h3>
+<p>Picture a kid born out in a rural district. They get a digital birth certificate, neatly tied to a Decentralized Identifier (DID). Fast forward a few years. The family relocates. A parent passes. Then, the phone or hardware wallet holding that private key gets lost or smashed. Suddenly, that kid can’t prove who they are, can’t pull up medical records, and can’t even sign up for school. That’s the <strong>key management crisis</strong> staring down digital identity systems for minors today.</p>
+<p>In the development world, we tend to fixate on <em>issuance</em>—just getting that credential into a child’s hands. But if we want systems that actually last, we need <strong>resilient key management for minor identities</strong>. Skip the recovery plans, skip the rotation, and ignore how control needs to shift over time? You’re basically baking digital exclusion into their future. Look, this isn’t just a tech headache; it’s a child rights issue, plain and simple. UNICEF puts the number of unregistered births at over 130 million. Any digital ID system worth its salt needs to catch and keep these kids in the fold without dumping expensive recovery hurdles on families who can’t afford them.</p>
+<p>Here, we’ll dig into how governments can actually roll out <strong>threshold cryptography for child digital identity</strong>, set up <strong>social recovery patterns for minors</strong>, and keep <strong>long-term DID sustainability for children</strong> intact. We’re leaving the blockchain hype behind. Instead, we’re focusing on practical, government-backed architectures that lean on open standards. The goal? Put the child’s best interests first, lock down privacy, and make sure everything plays nice across health, education, and social services.</p>
+<hr>
+</section>
+<section id="the-developmental-lifecycle-why-static-keys-fail-children" class="level2">
+<h2 class="anchored" data-anchor-id="the-developmental-lifecycle-why-static-keys-fail-children">The Developmental Lifecycle: Why Static Keys Fail Children</h2>
+<p>Adult digital IDs are pretty straightforward. You hold your key, you lose it, you recover it. Kids? Not so much. Their identity is constantly shifting, moving through a few pretty distinct phases:</p>
+<ol type="1">
+<li><strong>Pre-natal to Birth:</strong> Identity rides on parents or guardians. Key control sits entirely with them (or the state).</li>
+<li><strong>Early Childhood:</strong> Guardians handle everything. The kid has zero agency here.</li>
+<li><strong>Adolescence:</strong> Now the child gets some say (think accessing health portals or school records). Oversight has to walk the line between protection and letting them breathe.</li>
+<li><strong>Majority:</strong> Full handover. The child takes the wheel completely.</li>
+</ol>
+<p>Relying on static setups—say, just one private key sitting on a parent’s phone—doesn’t cut it across this timeline. It creates a glaring single point of failure, and frankly, it runs straight past the <strong>Convention on the Rights of the Child (CRC)</strong>, which is all about respecting how a kid’s capacities grow over time.</p>
+<blockquote class="blockquote">
+<p><strong>Analogy:</strong> Think of a child’s digital identity like a growing tree. A static key is like a rigid trellis. As the tree grows, the trellis becomes a constraint or breaks. We need a flexible support system that adapts as the child develops, ensuring the roots (the DID) remain secure while the structure evolves.</p>
+</blockquote>
+<p>So how do we fix it? By leaning into <strong>automated key rotation for government services</strong> and trust models that naturally shift from guardian-led to child-led as time goes on. As we touched on in <em>Engineering Dynamic Verifiable Credentials for Minors</em>, the actual credential data needs to refresh, but that underlying identity anchor? It has to stay rock-solid and secure.</p>
+<hr>
+</section>
+<section id="threshold-cryptography-balancing-oversight-and-autonomy" class="level2">
+<h2 class="anchored" data-anchor-id="threshold-cryptography-balancing-oversight-and-autonomy">Threshold Cryptography: Balancing Oversight and Autonomy</h2>
+<p>One of the heavy hitters in our toolkit? <strong>Threshold signature schemes</strong>. Instead of the usual public-key setup where one single key signs everything, threshold cryptography splits the power. It takes <em>M</em> signatures out of a pool of <em>N</em> possible signers to actually approve something.</p>
+<section id="how-it-works-for-minors" class="level3">
+<h3 class="anchored" data-anchor-id="how-it-works-for-minors">How It Works for Minors</h3>
+<p>When we’re dealing with a minor’s DID, we can set up a threshold policy that keeps guardians in the loop without handing any one person the master keys.</p>
+<ul>
+<li><strong>Scenario A (Young Child):</strong> We’re looking at a 2-of-3 threshold. Shares sit with Mom, Dad, and a Government Agent. One parent losing their phone doesn’t sink the ship; they either team up or loop in the state.</li>
+<li><strong>Scenario B (Adolescent):</strong> Still a 2-of-3 threshold, but now the shares are with the Child, a Guardian, and a Trusted Recovery Service. The teen can pull up school credentials, but anything high-stakes (like changing the recovery path itself) still needs a guardian’s nod.</li>
+<li><strong>Scenario C (Approaching Majority):</strong> We drop to a 2-of-2 threshold. Just the Child and the Guardian. The system’s basically warming up for the full handover.</li>
+</ul>
+<p>This setup seriously cuts down the risk of losing keys. A parent’s device gets lost? The identity isn’t gone; the other shares keep things running. It also blocks abuse, since no single guardian can just go rogue and hijack the kid’s ID.</p>
+</section>
+<section id="implementation-example-configurable-trust-policy" class="level3">
+<h3 class="anchored" data-anchor-id="implementation-example-configurable-trust-policy">Implementation Example: Configurable Trust Policy</h3>
+<p>Governments can actually write these policies out in a format that’s readable by humans (and machines). It maps straight to the cryptographic parameters under the hood. Here’s a conceptual JSON breakdown of how that trust policy might shift as the child ages.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"did"</span><span class="fu">:</span> <span class="st">"did:gov:minors:aminah-2028"</span><span class="fu">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"trustPolicy"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"version"</span><span class="fu">:</span> <span class="st">"1.0"</span><span class="fu">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"schema"</span><span class="fu">:</span> <span class="st">"https://w3c.org/identity/v1/policy"</span><span class="fu">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"phases"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"ageRange"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"min"</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span> <span class="dt">"max"</span><span class="fu">:</span> <span class="dv">5</span> <span class="fu">},</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"threshold"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"m"</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span> <span class="dt">"n"</span><span class="fu">:</span> <span class="dv">3</span> <span class="fu">},</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"signers"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"guardian_primary"</span><span class="ot">,</span> <span class="st">"guardian_secondary"</span><span class="ot">,</span> <span class="st">"gov_recovery_agent"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"allowedActions"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"access_health"</span><span class="ot">,</span> <span class="st">"access_education"</span><span class="ot">,</span> <span class="st">"update_demographics"</span><span class="ot">]</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"ageRange"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"min"</span><span class="fu">:</span> <span class="dv">6</span><span class="fu">,</span> <span class="dt">"max"</span><span class="fu">:</span> <span class="dv">15</span> <span class="fu">},</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"threshold"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"m"</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span> <span class="dt">"n"</span><span class="fu">:</span> <span class="dv">3</span> <span class="fu">},</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"signers"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"child_device"</span><span class="ot">,</span> <span class="st">"guardian_primary"</span><span class="ot">,</span> <span class="st">"social_worker"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"allowedActions"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"access_health"</span><span class="ot">,</span> <span class="st">"access_education"</span><span class="ot">,</span> <span class="st">"apply_social_benefits"</span><span class="ot">]</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"ageRange"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"min"</span><span class="fu">:</span> <span class="dv">16</span><span class="fu">,</span> <span class="dt">"max"</span><span class="fu">:</span> <span class="dv">17</span> <span class="fu">},</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"threshold"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"m"</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span> <span class="dt">"n"</span><span class="fu">:</span> <span class="dv">2</span> <span class="fu">},</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"signers"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"child_device"</span><span class="ot">,</span> <span class="st">"guardian_primary"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"allowedActions"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"full_access"</span><span class="ot">,</span> <span class="st">"prepare_majority_transfer"</span><span class="ot">]</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"ageRange"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"min"</span><span class="fu">:</span> <span class="dv">18</span><span class="fu">,</span> <span class="dt">"max"</span><span class="fu">:</span> <span class="dv">120</span> <span class="fu">},</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"threshold"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"m"</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span> <span class="dt">"n"</span><span class="fu">:</span> <span class="dv">1</span> <span class="fu">},</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"signers"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"child_device"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"allowedActions"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"full_control"</span><span class="ot">,</span> <span class="st">"rotate_keys"</span><span class="ot">,</span> <span class="st">"update_recovery"</span><span class="ot">]</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This policy basically hardcodes the <strong>best interests of the child</strong> into the system, tweaking oversight automatically as they grow up. Plus, it slots right into the <strong>Orchestrating the Health-to-CRVS Continuum</strong> patterns we talked about earlier. When a birth credential gets issued, the system can just flip a switch and initialize this whole threshold setup without any manual legwork.</p>
+<hr>
+</section>
+</section>
+<section id="social-recovery-patterns-community-based-resilience" class="level2">
+<h2 class="anchored" data-anchor-id="social-recovery-patterns-community-based-resilience">Social Recovery Patterns: Community-Based Resilience</h2>
+<p>In the ICT4D world, tech solutions only work if they actually match social reality. That’s where <strong>social recovery patterns for minors</strong> come in. They lean on trusted community networks to keep identity continuity alive. Honestly, this is a lifesaver in areas with spotty digital infrastructure or where families might be on the move.</p>
+<section id="what-is-social-recovery" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-social-recovery">What is Social Recovery?</h3>
+<p>Think of social recovery as a backup plan. A user gets their identity back by proving who they are to a small circle of trusted “guardians,” each holding a piece of the recovery key. For kids, that circle might look like:</p>
+<ul>
+<li>Biological parents or legal guardians.</li>
+<li>Community leaders or religious figures (where culturally appropriate and legally recognized).</li>
+<li>Government social workers or CRVS officers.</li>
+<li>Teachers or school administrators for education-related credentials.</li>
+</ul>
+</section>
+<section id="workflow-recovering-a-lost-key" class="level3">
+<h3 class="anchored" data-anchor-id="workflow-recovering-a-lost-key">Workflow: Recovering a Lost Key</h3>
+<ol type="1">
+<li><strong>Detection:</strong> The system flags that the kid’s device is compromised or the key is MIA.</li>
+<li><strong>Trigger:</strong> Someone kicks off a recovery request—either the child (if they’re old enough) or a guardian.</li>
+<li><strong>Verification:</strong> The system reaches out to the recovery guardians. If we’re running a 3-of-5 threshold, three of them need to give the green light.</li>
+<li><strong>Reconstruction:</strong> Those guardians hand over their recovery shares. The system either rebuilds the key or mints a fresh pair tied to the exact same DID.</li>
+<li><strong>Audit:</strong> Every single recovery step gets logged on an immutable ledger or a secure government trail. No room for fraud.</li>
+</ol>
+<blockquote class="blockquote">
+<p><strong>Human Rights Note:</strong> Social recovery must respect privacy. Guardians should only verify the <em>identity</em> of the requester, not access the child’s sensitive data. Zero-knowledge proofs can be used here to prove that the person requesting recovery is indeed the child or authorized guardian without revealing health or education records.</p>
+</blockquote>
+<p>This pattern is pretty much the backbone of <strong>long-term DID sustainability for children</strong>. Even if family ties fracture—whether through orphanhood or migration—the kid’s identity stays recoverable thanks to that social safety net. It lines up perfectly with the principles we laid out in <em>Architecting the Minor-Centric DVC Ecosystem</em>, where we stressed that governance frameworks have to support continuity of care.</p>
+<hr>
+</section>
+</section>
+<section id="automated-key-rotation-and-did-longevity" class="level2">
+<h2 class="anchored" data-anchor-id="automated-key-rotation-and-did-longevity">Automated Key Rotation and DID Longevity</h2>
+<p>Security isn’t something you set and forget. Keys need regular rotation to keep compromise risks low. And let’s be real—expecting a kid or their parents to handle manual rotation isn’t happening. We need <strong>automated key rotation for government services</strong> that runs quietly in the background.</p>
+<section id="the-role-of-did-methods" class="level3">
+<h3 class="anchored" data-anchor-id="the-role-of-did-methods">The Role of DID Methods</h3>
+<p>DIDs (Decentralized Identifiers) are built to stick around. Something like <code>did:gov:minors:aminah-2028</code> stays exactly the same for the child’s entire life, even while the cryptographic keys underneath swap out. The DID Document just acts as the living record, holding the current verification methods and auth protocols.</p>
+<p>Automated rotation usually breaks down into three parts:</p>
+<ol type="1">
+<li><strong>Scheduled Rotation:</strong> Keys get swapped out every 6 or 12 months, depending on what the policy says.</li>
+<li><strong>Event-Driven Rotation:</strong> If a breach pops up or guardian status shifts, keys rotate immediately.</li>
+<li><strong>DID Document Updates:</strong> The document gets patched with the new keys, and the old ones are quietly marked as deprecated.</li>
+</ol>
+</section>
+<section id="code-snippet-did-document-with-rotation-policy" class="level3">
+<h3 class="anchored" data-anchor-id="code-snippet-did-document-with-rotation-policy">Code Snippet: DID Document with Rotation Policy</h3>
+<p>Here’s a quick look at a DID Document structure built for automated rotation. Keep an eye on the <code>id:rotate</code> method and those timestamped verification methods.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"@context"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://www.w3.org/ns/did/v1"</span><span class="ot">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://w3c-ccg.github.io/did-rotation/v1"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"did:gov:minors:aminah-2028"</span><span class="fu">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"verificationMethod"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"did:gov:minors:aminah-2028#key-1"</span><span class="fu">,</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"Multikey"</span><span class="fu">,</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"controller"</span><span class="fu">:</span> <span class="st">"did:gov:minors:aminah-2028"</span><span class="fu">,</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"publicKeyMultibase"</span><span class="fu">:</span> <span class="st">"z..."</span><span class="fu">,</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"rotationPolicy"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"frequency"</span><span class="fu">:</span> <span class="st">"P6M"</span><span class="fu">,</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"lastRotated"</span><span class="fu">:</span> <span class="st">"2026-01-01T00:00:00Z"</span><span class="fu">,</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"nextRotation"</span><span class="fu">:</span> <span class="st">"2026-07-01T00:00:00Z"</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"did:gov:minors:aminah-2028#key-2"</span><span class="fu">,</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"Multikey"</span><span class="fu">,</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"controller"</span><span class="fu">:</span> <span class="st">"did:gov:minors:aminah-2028"</span><span class="fu">,</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"publicKeyMultibase"</span><span class="fu">:</span> <span class="st">"z..."</span><span class="fu">,</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"status"</span><span class="fu">:</span> <span class="st">"active"</span><span class="fu">,</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"rotationPolicy"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"frequency"</span><span class="fu">:</span> <span class="st">"P6M"</span><span class="fu">,</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"lastRotated"</span><span class="fu">:</span> <span class="st">"2026-07-01T00:00:00Z"</span><span class="fu">,</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"nextRotation"</span><span class="fu">:</span> <span class="st">"2026-12-01T00:00:00Z"</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"authentication"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"did:gov:minors:aminah-2028#key-2"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"keyAgreement"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"did:gov:minors:aminah-2028#key-2"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"service"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"did:gov:minors:aminah-2028#credential-endpoint"</span><span class="fu">,</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"LinkedDomains"</span><span class="fu">,</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"serviceEndpoint"</span><span class="fu">:</span> <span class="st">"https://crvs.gov.example/credentials/aminah-2028"</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This setup means verifiers are always checking the freshest key, while still keeping a clean history for audits. It also plays nicely with the <strong>Civil Registry Integration</strong> workflows we walked through earlier. Birth credentials stay linked to a DID that can evolve over time, without ever snapping the tether to the authoritative source.</p>
+<hr>
+</section>
+</section>
+<section id="architectural-patterns-for-credential-continuity" class="level2">
+<h2 class="anchored" data-anchor-id="architectural-patterns-for-credential-continuity">Architectural Patterns for Credential Continuity</h2>
+<p>If we actually want interoperability that works, we need to look at the <strong>four layers of interoperability</strong>: technical, semantic, organizational, and policy. Good news? Resilient key management touches all four of them.</p>
+<section id="technical-layer-open-standards-and-interoperability" class="level3">
+<h3 class="anchored" data-anchor-id="technical-layer-open-standards-and-interoperability">1. Technical Layer: Open Standards and Interoperability</h3>
+<p>We’re big fans of open standards like W3C Verifiable Credentials (VC) and DIDs. Why? Because they guarantee that a credential issued by a health clinic can actually be verified by a school, and vice versa.</p>
+<ul>
+<li><strong>Open Source Solutions:</strong> Governments should lean on open-source identity wallets and issuance engines. Vendor lock-in is a recipe for disaster, especially in development contexts where funding is always up and down.</li>
+<li><strong>Interoperability:</strong> The system needs to handle cross-border verification smoothly. If a kid moves countries, their credentials should still be recognized. That means syncing up with initiatives like the Global Digital Identity Alliance (GDIA).</li>
+</ul>
+</section>
+<section id="semantic-layer-shared-schemas" class="level3">
+<h3 class="anchored" data-anchor-id="semantic-layer-shared-schemas">2. Semantic Layer: Shared Schemas</h3>
+<p>Credentials have to speak the same language. Shared schemas make sure the meaning doesn’t get lost in translation. Take a “birth_date” field in a health VC, for instance—it needs to map perfectly to the “dateOfBirth” field in a civil registry VC.</p>
+<ul>
+<li><strong>W3C Schema Design:</strong> As we covered in <em>Civil Registry Integration for Minor Identity</em>, leaning on JSON-LD and W3C schemas keeps data machine-readable and semantically tight.</li>
+<li><strong>Selective Disclosure:</strong> Kids should only have to share what’s necessary. Threshold cryptography actually makes this possible, letting them prove specific attributes (like “I’m over 16”) without handing over the raw data.</li>
+</ul>
+</section>
+<section id="organizational-layer-government-workflows" class="level3">
+<h3 class="anchored" data-anchor-id="organizational-layer-government-workflows">3. Organizational Layer: Government Workflows</h3>
+<p>Behind the tech, organizations actually have to coordinate. Otherwise, service delivery falls apart.</p>
+<ul>
+<li><strong>Event-Driven Architecture:</strong> A kid is born? The CRVS system triggers a birth VC. They enroll in school? The education system pulls that birth VC and mints an education VC. This event-driven flow cuts down on manual data entry and keeps errors to a minimum.</li>
+<li><strong>Guardian Management:</strong> Governments need solid workflows for updating guardian info. If a kid goes into foster care, that threshold policy has to shift to match the new guardians. That’s where integration with social protection systems becomes non-negotiable.</li>
+</ul>
+</section>
+<section id="policy-layer-legal-frameworks-and-rights" class="level3">
+<h3 class="anchored" data-anchor-id="policy-layer-legal-frameworks-and-rights">4. Policy Layer: Legal Frameworks and Rights</h3>
+<p>Policy is the bedrock. You can have the fanciest tech in the world, but without strong legal frameworks backing it up, it won’t hold.</p>
+<ul>
+<li><strong>Data Protection:</strong> Complying with GDPR, local data laws, and the CRC isn’t optional. Data minimization and purpose limitation have to be baked in.</li>
+<li><strong>Consent Evolution:</strong> Consent mechanisms need to grow up alongside the child. Little kids can’t consent, so guardians step in. As capacity builds, the child takes over. We dive deeper into this in <em>Engineering Dynamic Verifiable Credentials for Minors</em>.</li>
+<li><strong>Right to be Forgotten:</strong> Identity records might stick around forever, but personal data should be deletable on request (within legal limits, of course). The architecture needs to support clean data separation to make that actually happen.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="case-study-simulation-aminas-journey-from-birth-to-employment" class="level2">
+<h2 class="anchored" data-anchor-id="case-study-simulation-aminas-journey-from-birth-to-employment">Case Study Simulation: Amina’s Journey from Birth to Employment</h2>
+<p>Let’s walk through a real-world style example to see how all these patterns actually play out.</p>
+<section id="phase-1-birth-and-early-childhood-age-0-5" class="level3">
+<h3 class="anchored" data-anchor-id="phase-1-birth-and-early-childhood-age-0-5">Phase 1: Birth and Early Childhood (Age 0-5)</h3>
+<ul>
+<li><strong>Event:</strong> Amina arrives at a local health clinic. HL7 FHIR data flows straight into the CRVS system.</li>
+<li><strong>Action:</strong> CRVS cuts a Verifiable Birth Credential. A fresh DID <code>did:gov:minors:aminah-2028</code> gets created.</li>
+<li><strong>Key Management:</strong> We lock in a 2-of-3 threshold. Shares go to Mom, Dad, and a Government Recovery Agent.</li>
+<li><strong>Outcome:</strong> Amina’s got a secure digital ID tied directly to her birth record. Her parents can pull health and nutrition services for her without jumping through hoops.</li>
+</ul>
+</section>
+<section id="phase-2-school-enrollment-and-adolescence-age-6-15" class="level3">
+<h3 class="anchored" data-anchor-id="phase-2-school-enrollment-and-adolescence-age-6-15">Phase 2: School Enrollment and Adolescence (Age 6-15)</h3>
+<ul>
+<li><strong>Event:</strong> Time for primary school.</li>
+<li><strong>Action:</strong> The school asks for the birth credential to verify who she is. A Verifiable Education Credential gets issued.</li>
+<li><strong>Key Management:</strong> The threshold shifts. Amina gets a kid-friendly digital wallet. We’re now at 2-of-3: Amina, Mom, and a Trusted Social Worker.</li>
+<li><strong>Scenario:</strong> Her dad passes away. The system catches the government notification and updates the threshold, dropping him from the mix. The social worker’s share activates. Amina’s identity stays completely secure.</li>
+<li><strong>Outcome:</strong> She can pull up her school records and apply for scholarships. The system absorbs the family change without breaking a sweat.</li>
+</ul>
+</section>
+<section id="phase-3-transition-to-majority-age-16-18" class="level3">
+<h3 class="anchored" data-anchor-id="phase-3-transition-to-majority-age-16-18">Phase 3: Transition to Majority (Age 16-18)</h3>
+<ul>
+<li><strong>Event:</strong> Amina hits 16. She’s now allowed to access certain digital health services on her own.</li>
+<li><strong>Action:</strong> The threshold tightens to 2-of-2: Amina and Mom. She gets more reins.</li>
+<li><strong>Key Management:</strong> Automated rotation kicks in. Her wallet prompts her to verify her identity now and then, just to keep things active.</li>
+<li><strong>Outcome:</strong> Amina’s building real digital literacy and actually starting to feel ownership over her ID.</li>
+</ul>
+</section>
+<section id="phase-4-employment-and-full-autonomy-age-18" class="level3">
+<h3 class="anchored" data-anchor-id="phase-4-employment-and-full-autonomy-age-18">Phase 4: Employment and Full Autonomy (Age 18+)</h3>
+<ul>
+<li><strong>Event:</strong> She turns 18, graduates, and starts job hunting.</li>
+<li><strong>Action:</strong> The threshold flips to 1-of-1. Full control. She can rotate keys, swap out recovery guardians, and manage credentials solo.</li>
+<li><strong>Key Management:</strong> She adds a new recovery guardian (maybe a close friend or mentor) and runs the automated key rotation.</li>
+<li><strong>Outcome:</strong> Amina presents her education and ID credentials to the employer. Her digital identity carried her from birth to her first job without a single hitch.</li>
+</ul>
+<p>This journey really highlights what <strong>resilient key management for minor identities</strong> can do. It shows exactly how threshold crypto, social recovery, and automated rotation team up to keep kids safe while still respecting their growing independence.</p>
+<hr>
+</section>
+</section>
+<section id="risks-mitigations-and-human-rights-safeguards" class="level2">
+<h2 class="anchored" data-anchor-id="risks-mitigations-and-human-rights-safeguards">Risks, Mitigations, and Human Rights Safeguards</h2>
+<p>Rolling out systems like this does come with risks, obviously. We can’t ignore them. Here’s a quick breakdown of the main pitfalls and how to sidestep them.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Risk Category</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Mitigation Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Key Loss</strong></td>
+<td style="text-align: left;">Guardians lose access to keys; child becomes identity-less.</td>
+<td style="text-align: left;"><strong>Social Recovery:</strong> Multiple recovery guardians. <strong>Threshold Crypto:</strong> M-of-N shares prevent single-point failure.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Abuse</strong></td>
+<td style="text-align: left;">Guardians misuse child’s identity or access sensitive data.</td>
+<td style="text-align: left;"><strong>Least Privilege:</strong> Guardians only access necessary data. <strong>Audit Trails:</strong> Immutable logs of all access. <strong>Zero-Knowledge Proofs:</strong> Verify attributes without revealing data.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Data Breach</strong></td>
+<td style="text-align: left;">Government database compromised; keys exposed.</td>
+<td style="text-align: left;"><strong>Decentralization:</strong> Keys stored in user wallets, not central databases. <strong>Encryption:</strong> Data encrypted at rest and in transit. <strong>Open Source:</strong> Regular security audits.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Exclusion</strong></td>
+<td style="text-align: left;">Marginalized children lack access to digital services.</td>
+<td style="text-align: left;"><strong>Offline Modes:</strong> Support for offline issuance and verification. <strong>Community Agents:</strong> Empower community workers to assist with recovery. <strong>Inclusive Design:</strong> Wallets accessible to low-literacy users.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Policy Drift</strong></td>
+<td style="text-align: left;">Legal frameworks lag behind technology.</td>
+<td style="text-align: left;"><strong>Agile Governance:</strong> Regular policy reviews. <strong>Stakeholder Engagement:</strong> Involve child rights organizations in design. <strong>Interoperability:</strong> Align with international standards.</td>
+</tr>
+</tbody>
+</table>
+<p>This risk matrix really drives home why a holistic approach matters. Tech alone won’t cut it. You need solid governance, real community buy-in, and a genuine commitment to human rights. Like we pointed out in <em>Bootstrapping Trust: Technical Foundations and Architectural Patterns for Digital Verifiable Credentials in Minor-Centric Ecosystems</em>, trust doesn’t just appear. It’s built on transparency, accountability, and actually respecting rights.</p>
+<hr>
+</section>
+<section id="actionable-takeaways-for-policymakers-and-technologists" class="level2">
+<h2 class="anchored" data-anchor-id="actionable-takeaways-for-policymakers-and-technologists">Actionable Takeaways for Policymakers and Technologists</h2>
+<p>If you’re a policymaker or technologist looking to build resilient key management for minor identities, here’s where to start:</p>
+<ol type="1">
+<li><strong>Adopt Open Standards:</strong> Commit to W3C VC and DID standards. Steer clear of proprietary solutions that will lock you in.</li>
+<li><strong>Implement Threshold Cryptography:</strong> Lean on M-of-N signatures to strike that balance between oversight and autonomy. Set up policies that naturally evolve as the child ages.</li>
+<li><strong>Deploy Social Recovery:</strong> Weave community-based recovery into the fabric of the system. Train social workers and local leaders to step in as trusted guardians when needed.</li>
+<li><strong>Automate Key Rotation:</strong> Build systems that handle key rotation automatically, strictly following policy. Make sure DID documents update themselves without a hitch.</li>
+<li><strong>Ensure Interoperability:</strong> Hit all four layers of interoperability. Use shared schemas and let event-driven workflows do the heavy lifting.</li>
+<li><strong>Prioritize Human Rights:</strong> Bake data protection, privacy, and child rights directly into the design. Run impact assessments, and do them regularly.</li>
+<li><strong>Engage Stakeholders:</strong> Don’t build in a vacuum. Bring parents, kids, teachers, and civil society into the design and rollout process.</li>
+</ol>
+<section id="summary-table-key-technologies-and-their-role" class="level3">
+<h3 class="anchored" data-anchor-id="summary-table-key-technologies-and-their-role">Summary Table: Key Technologies and Their Role</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Technology</th>
+<th style="text-align: left;">Role in Minor Identity</th>
+<th style="text-align: left;">Benefit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Threshold Cryptography</strong></td>
+<td style="text-align: left;">Distributes key control among multiple parties.</td>
+<td style="text-align: left;">Prevents single-point failure; balances oversight and autonomy.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Social Recovery</strong></td>
+<td style="text-align: left;">Leverages trusted community members for key recovery.</td>
+<td style="text-align: left;">Ensures resilience in low-infrastructure contexts; supports vulnerable children.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Automated Key Rotation</strong></td>
+<td style="text-align: left;">Updates keys regularly without manual intervention.</td>
+<td style="text-align: left;">Enhances security; reduces burden on users.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>DID Methods</strong></td>
+<td style="text-align: left;">Provides persistent identifiers independent of keys.</td>
+<td style="text-align: left;">Ensures long-term identity stability; supports key evolution.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Zero-Knowledge Proofs</strong></td>
+<td style="text-align: left;">Verifies attributes without revealing data.</td>
+<td style="text-align: left;">Protects privacy; enables selective disclosure.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Open Standards (W3C)</strong></td>
+<td style="text-align: left;">Ensures interoperability and portability.</td>
+<td style="text-align: left;">Prevents vendor lock-in; supports cross-sector and cross-border use.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Building digital ID systems for kids is genuinely one of the most powerful moves a government can make to drive inclusion, protect rights, and streamline services. But handing out credentials is only the first step. What actually matters is <strong>resilient key management for minor identities</strong>—systems tough enough to handle the passage of time, life changes, and real-world adversity.</p>
+<p>By tapping into <strong>threshold cryptography for child digital identity</strong>, rolling out <strong>social recovery patterns for minors</strong>, and locking in <strong>long-term DID sustainability for children</strong>, we can build systems that actually empower kids, keep their data safe, and support them from day one to adulthood. Grounded in open standards and human rights, these strategies give governments and development partners a clear roadmap to truly leave no child behind.</p>
+<p>The future of child identity isn’t just about going digital. It’s about building something resilient, inclusive, and genuinely child-centric. With the right architecture and a real commitment to getting it right, we can make sure every kid gets a secure, lasting digital ID that actually opens doors instead of closing them.</p>
+<p><em>We’re convinced that by leaning into these resilient patterns, governments can turn digital identity from a dusty, static record into a living tool for empowerment. That’s how we make sure technology actually serves the best interests of every child, no matter where they are.</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/merlos\.github\.io\/dvc4c\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

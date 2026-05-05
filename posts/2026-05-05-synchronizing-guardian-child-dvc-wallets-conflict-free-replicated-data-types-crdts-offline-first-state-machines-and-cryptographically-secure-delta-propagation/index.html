@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-05-05">
+<meta name="keywords" content="digital verifiable credentials, offline wallet synchronization, CRDT conflict resolution, cryptographic delta propagation, child digital identity, distributed state machines, vector clocks sync, digital public infrastructure, guardian-child data sync, offline-first design">
+<meta name="description" content="Discover how CRDTs, offline-first state machines, and cryptographic delta propagation enable secure sync for guardian-child digital wallets.">
+
+<title>Synchronizing Guardian-Child DVC Wallets: Conflict-Free Replicated Data Types (CRDTs), Offline-First State Machines, and Cryptographically Secure Delta Propagation – Digital Verifiable Credentials for Children</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-74066ca329e1ac19c53faf31dafc0aff.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Digital Verifiable Credentials for Children</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-connectivity-paradox-why-traditional-sync-fails-for-minor-digital-identities" id="toc-the-connectivity-paradox-why-traditional-sync-fails-for-minor-digital-identities" class="nav-link active" data-scroll-target="#the-connectivity-paradox-why-traditional-sync-fails-for-minor-digital-identities">The Connectivity Paradox: Why Traditional Sync Fails for Minor Digital Identities</a></li>
+  <li><a href="#offline-first-state-machines-modeling-the-guardian-child-relationship" id="toc-offline-first-state-machines-modeling-the-guardian-child-relationship" class="nav-link" data-scroll-target="#offline-first-state-machines-modeling-the-guardian-child-relationship">Offline-First State Machines: Modeling the Guardian-Child Relationship</a>
+  <ul class="collapse">
+  <li><a href="#from-prenatal-care-to-school-enrollment-a-state-driven-workflow" id="toc-from-prenatal-care-to-school-enrollment-a-state-driven-workflow" class="nav-link" data-scroll-target="#from-prenatal-care-to-school-enrollment-a-state-driven-workflow">From Prenatal Care to School Enrollment: A State-Driven Workflow</a></li>
+  </ul></li>
+  <li><a href="#conflict-free-replicated-data-types-crdts-for-credential-state" id="toc-conflict-free-replicated-data-types-crdts-for-credential-state" class="nav-link" data-scroll-target="#conflict-free-replicated-data-types-crdts-for-credential-state">Conflict-Free Replicated Data Types (CRDTs) for Credential State</a>
+  <ul class="collapse">
+  <li><a href="#how-crdts-resolve-the-last-write-wins-problem-without-a-central-server" id="toc-how-crdts-resolve-the-last-write-wins-problem-without-a-central-server" class="nav-link" data-scroll-target="#how-crdts-resolve-the-last-write-wins-problem-without-a-central-server">How CRDTs Resolve the “Last-Write-Wins” Problem Without a Central Server</a></li>
+  </ul></li>
+  <li><a href="#cryptographic-delta-propagation-vector-clocks" id="toc-cryptographic-delta-propagation-vector-clocks" class="nav-link" data-scroll-target="#cryptographic-delta-propagation-vector-clocks">Cryptographic Delta Propagation &amp; Vector Clocks</a>
+  <ul class="collapse">
+  <li><a href="#minimizing-data-exposure-through-bandwidth-efficient-sync" id="toc-minimizing-data-exposure-through-bandwidth-efficient-sync" class="nav-link" data-scroll-target="#minimizing-data-exposure-through-bandwidth-efficient-sync">Minimizing Data Exposure Through Bandwidth-Efficient Sync</a></li>
+  </ul></li>
+  <li><a href="#event-sourcing-for-auditability-and-regulatory-compliance" id="toc-event-sourcing-for-auditability-and-regulatory-compliance" class="nav-link" data-scroll-target="#event-sourcing-for-auditability-and-regulatory-compliance">Event Sourcing for Auditability and Regulatory Compliance</a></li>
+  <li><a href="#interoperability-across-the-four-layers" id="toc-interoperability-across-the-four-layers" class="nav-link" data-scroll-target="#interoperability-across-the-four-layers">Interoperability Across the Four Layers</a></li>
+  <li><a href="#human-rights-and-data-protection-by-design" id="toc-human-rights-and-data-protection-by-design" class="nav-link" data-scroll-target="#human-rights-and-data-protection-by-design">Human Rights and Data Protection by Design</a></li>
+  <li><a href="#implementation-roadmap-for-government-and-un-programmes" id="toc-implementation-roadmap-for-government-and-un-programmes" class="nav-link" data-scroll-target="#implementation-roadmap-for-government-and-un-programmes">Implementation Roadmap for Government and UN Programmes</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Synchronizing Guardian-Child DVC Wallets: Conflict-Free Replicated Data Types (CRDTs), Offline-First State Machines, and Cryptographically Secure Delta Propagation</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Digital Identity</div>
+    <div class="quarto-category">Distributed Systems</div>
+    <div class="quarto-category">Digital Public Infrastructure</div>
+    <div class="quarto-category">Child Rights &amp; Data Protection</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Discover how CRDTs, offline-first state machines, and cryptographic delta propagation enable secure sync for guardian-child digital wallets.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ian Merlos </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 5, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+<div>
+  <div class="keywords">
+    <div class="block-title">Keywords</div>
+    <p>digital verifiable credentials, offline wallet synchronization, CRDT conflict resolution, cryptographic delta propagation, child digital identity, distributed state machines, vector clocks sync, digital public infrastructure, guardian-child data sync, offline-first design</p>
+  </div>
+</div>
+
+</header>
+
+
+<p>How do we keep a child’s digital identity in sync with their guardian’s wallet when the internet vanishes for days in remote clinics, rural schools, or mobile outreach units? In low- and middle-income countries, spotty connectivity isn’t some rare edge case—it’s just how things work. The ITU and GSMA report that over 3.6 billion people are still completely offline, and even for those who are connected, packet loss, lag, and unreliable backhaul are pretty much the norm. Traditional client-server sync models (which assume you’re always online with fast, stable connections) just fall apart when you apply them to guardian-child verifiable credential (DVC) wallets. If a clinic hands out a birth credential offline, or a social worker tweaks a care plan without any backhaul, the system still needs to keep data consistent, protect the child’s rights, and stop anything from leaking. That’s exactly why <strong>how to synchronize guardian child DVC wallets offline</strong> has become such a crucial puzzle for digital public infrastructure (DPI). But it’s not unsolvable. By pairing offline-first state machines with conflict-free replicated data types (CRDTs) and cryptographically secure delta propagation, governments and UN programmes can actually build identity systems that are resilient, privacy-focused, and compliant. These systems can follow a kid from prenatal visits all the way to their first job, without breaking a sweat over interoperability or regulatory hurdles.</p>
+<section id="the-connectivity-paradox-why-traditional-sync-fails-for-minor-digital-identities" class="level2">
+<h2 class="anchored" data-anchor-id="the-connectivity-paradox-why-traditional-sync-fails-for-minor-digital-identities">The Connectivity Paradox: Why Traditional Sync Fails for Minor Digital Identities</h2>
+<p>Most digital identity setups run on a pretty simple assumption: there’s one central server acting as the single source of truth. A wallet asks for a credential, the server checks it, signs it, and sends it back. Updates trickle through REST or GraphQL endpoints, and if two people try to change something at once, the system just leans on timestamps or database locks to sort it out. That works fine when the internet is reliable. But step into an intermittent network environment, and the whole thing falls apart. Picture this: two guardians are updating a child’s wallet at the same time on different devices, or a clinic is stamping a health credential while the civil registry is completely offline. Traditional systems will either drop one of those updates, overwrite valid data, or force staff into tedious manual reconciliation. None of those outcomes sit well with data integrity, and they definitely don’t serve the child.</p>
+<p>When we’re talking about minors, the stakes are naturally higher. The UN Convention on the Rights of the Child (UNCRC) is pretty clear: state systems need to prioritize the child’s best interests, protect their privacy, and respect their evolving capacity. So, what happens when a sync glitch erases a vaccination record, flips a consent flag, or accidentally spills personal data? It’s a direct violation of those obligations. And let’s be honest—while proprietary blockchain solutions love to shout “decentralization,” they often just bring heavy storage overhead, rigid consensus rules, and terrible offline support. What governments and development partners really need is a lightweight, open-standard setup that treats internet access as a nice-to-have, not a hard requirement.</p>
+<p>That’s where offline-first design flips the script. Instead of waiting for a server, every wallet (guardian or child) keeps its own local, authoritative copy of the data. Syncing just becomes a quiet background task that merges everything once the connection returns. This lines up perfectly with the World Bank’s Digital Public Infrastructure guidelines, which push for resilience, interoperability, and user sovereignty. Decouple state management from network availability, and suddenly a child’s digital identity stays functional, auditable, and secure, no matter how shaky the local infrastructure is.</p>
+</section>
+<section id="offline-first-state-machines-modeling-the-guardian-child-relationship" class="level2">
+<h2 class="anchored" data-anchor-id="offline-first-state-machines-modeling-the-guardian-child-relationship">Offline-First State Machines: Modeling the Guardian-Child Relationship</h2>
+<p>Think of a state machine as a reliable roadmap for how a child’s digital identity changes as they move through different government systems. Instead of treating credentials like static paper files, we model them as living artifacts that shift based on life events, consent updates, or administrative tweaks. It’s incredibly useful when you’re trying to coordinate across health, civil registration, education, and social protection without everything falling into chaos.</p>
+<section id="from-prenatal-care-to-school-enrollment-a-state-driven-workflow" class="level3">
+<h3 class="anchored" data-anchor-id="from-prenatal-care-to-school-enrollment-a-state-driven-workflow">From Prenatal Care to School Enrollment: A State-Driven Workflow</h3>
+<p>Let’s walk through a pretty standard journey for a kid in a resource-tight area: 1. <strong>Prenatal/Postnatal</strong>: A maternal health record gets created. A provisional DID is minted, and we set up a guardian delegation key. 2. <strong>Birth Registration</strong>: The civil registry hands out a birth credential, and the state machine flips from <code>PROVISIONAL</code> to <code>REGISTERED</code>. 3. <strong>Immunization &amp; Health</strong>: Clinics add health credentials to the mix, and consent flags get adjusted as the kid gets older. 4. <strong>School Enrollment</strong>: Education officials verify that birth credential, hand out a student ID, and the state shifts to <code>ENROLLED</code>. 5. <strong>Adulthood Transition</strong>: Once they hit the age of majority, control passes from the guardian to the individual. Keys rotate, and those delegation policies quietly expire.</p>
+<p>Every single transition kicks off specific credential operations, policy checks, and sync triggers. By mapping this out as a finite state machine, governments can automate compliance, stop data from being exposed too early, and make sure only the right people can move things forward. And the best part? You don’t need a constant internet connection. State transitions can just queue up locally and apply themselves the moment sync happens.</p>
+<p><em>Diagram description</em>: Imagine a horizontal flowchart with five nodes: <code>PROVISIONAL</code> → <code>REGISTERED</code> → <code>HEALTH_TRACKED</code> → <code>ENROLLED</code> → <code>AUTONOMOUS</code>. Arrows between nodes are labeled with triggering events (e.g., <code>BirthCertIssued</code>, <code>ConsentUpdated</code>, <code>AgeThresholdMet</code>). Each node contains a small icon representing the issuing authority (clinic, civil registry, school, DVC wallet). A dashed line loops back from <code>AUTONOMOUS</code> to <code>PROVISIONAL</code> labeled <code>GuardianReassignment</code>, showing that state machines support complex, non-linear life events.</p>
+<p>This predictable model slots right into existing guidance for dynamic credential updates. As we’ve looked at in [Engineering Dynamic Verifiable Credentials for Minors: Secure Update Mechanisms, Versioning Strategies, and Automated Consent Evolution Workflows — Dynamic verifiable credentials for minors: secure delta updates, versioning, automated consent evolution, and privacy standards. (url: posts/2026-05-04-engineering-dynamic-verifiable-credentials-for-minors-secure-update-mechanisms-versioning-strategies-and-automated-consent-evolution-workflows/)], using state-driven issuance cuts down on administrative busywork and makes sure credential lifecycles actually line up with legal and developmental milestones.</p>
+</section>
+</section>
+<section id="conflict-free-replicated-data-types-crdts-for-credential-state" class="level2">
+<h2 class="anchored" data-anchor-id="conflict-free-replicated-data-types-crdts-for-credential-state">Conflict-Free Replicated Data Types (CRDTs) for Credential State</h2>
+<p>When you’ve got multiple devices holding copies of a wallet’s state, conflicts are basically guaranteed. A guardian tweaks consent settings on a tablet while a social worker edits care notes on a phone. Without a central server calling the shots, how do you merge those changes without losing or corrupting data? That’s where conflict-free replicated data types (CRDTs) come in.</p>
+<p>CRDTs are essentially mathematical structures built for distributed systems. They guarantee that no matter how many independent updates happen across different replicas, everything will always converge to the exact same state once they sync up—no manual fixing required. Unlike traditional databases that lean on locking mechanisms or “last-writer-wins” guesswork, CRDTs use algebraic properties to resolve conflicts in a completely deterministic way.</p>
+<section id="how-crdts-resolve-the-last-write-wins-problem-without-a-central-server" class="level3">
+<h3 class="anchored" data-anchor-id="how-crdts-resolve-the-last-write-wins-problem-without-a-central-server">How CRDTs Resolve the “Last-Write-Wins” Problem Without a Central Server</h3>
+<p>In a guardian-child DVC context, we rarely need to store raw personal data in the wallet. Instead, we store metadata, status flags, consent vectors, and credential references. These are ideal candidates for CRDTs. Consider a <code>ConsentRegistry</code> that tracks which sectors can access specific credential attributes:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Simplified LWW-Register CRDT for consent flags</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConsentRegister {</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">constructor</span>() {</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">value</span> <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">timestamp</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">origin</span> <span class="op">=</span> <span class="st">""</span><span class="op">;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update</span>(newValue<span class="op">,</span> timestamp<span class="op">,</span> origin) {</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (timestamp <span class="op">&gt;</span> <span class="kw">this</span><span class="op">.</span><span class="at">timestamp</span> <span class="op">||</span> </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        (timestamp <span class="op">===</span> <span class="kw">this</span><span class="op">.</span><span class="at">timestamp</span> <span class="op">&amp;&amp;</span> origin <span class="op">&gt;</span> <span class="kw">this</span><span class="op">.</span><span class="at">origin</span>)) {</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="kw">this</span><span class="op">.</span><span class="at">value</span> <span class="op">=</span> newValue<span class="op">;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="kw">this</span><span class="op">.</span><span class="at">timestamp</span> <span class="op">=</span> timestamp<span class="op">;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="kw">this</span><span class="op">.</span><span class="at">origin</span> <span class="op">=</span> origin<span class="op">;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">merge</span>(other) {</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="fu">update</span>(other<span class="op">.</span><span class="at">value</span><span class="op">,</span> other<span class="op">.</span><span class="at">timestamp</span><span class="op">,</span> other<span class="op">.</span><span class="at">origin</span>)<span class="op">;</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This little structure ensures that consent updates from different guardians or agencies merge in a predictable way. The <code>timestamp</code> and <code>origin</code> fields keep race conditions at bay, and the <code>merge</code> operation guarantees commutativity, associativity, and idempotency—the three pillars that make CRDT convergence work.</p>
+<p>CRDTs are also fantastic for handling credential status. You could use a <code>G-Counter</code> (Grow-only Counter) to track verification counts, or an <code>OR-Set</code> (Observed-Remove Set) to manage revocation lists without needing a central revocation server at all. This lines up nicely with the principles we covered in [Verifier-Side Optimization for Minor Credential Networks: DNS-Based DID Resolution, Edge Caching Strategies, and Low-Latency Status Propagation — Optimize verifier endpoints for minor credential networks using DNS-based DIDs, edge caching, and parallel pipelines to slash latency while ensuring privacy. (url: posts/2026-05-05-verifier-side-optimization-for-minor-credential-networks-dns-based-did-resolution-edge-caching-strategies-and-low-latency-status-propagation/)], where lightweight, distributed status tracking cuts down on the need for always-on infrastructure.</p>
+<p>By baking CRDTs into the wallet’s local storage, governments can make sure offline updates never accidentally step on each other. Once the network comes back, everything merges smoothly, keeping audit trails intact and respecting the latest authorized changes. In humanitarian settings—where displacement, migration, and fragmented care are the norm—that kind of resilience isn’t just nice to have; it’s essential.</p>
+</section>
+</section>
+<section id="cryptographic-delta-propagation-vector-clocks" class="level2">
+<h2 class="anchored" data-anchor-id="cryptographic-delta-propagation-vector-clocks">Cryptographic Delta Propagation &amp; Vector Clocks</h2>
+<p>Trying to sync entire wallets over metered or spotty networks is both inefficient and a bit risky. Rather than blasting full state snapshots across the wire, systems should only push the actual differences—what we call cryptographic deltas. Pair that with vector clocks, and you’ve got a setup that slashes bandwidth usage, shrinks the attack surface, and keeps causal consistency intact across all replicas.</p>
+<section id="minimizing-data-exposure-through-bandwidth-efficient-sync" class="level3">
+<h3 class="anchored" data-anchor-id="minimizing-data-exposure-through-bandwidth-efficient-sync">Minimizing Data Exposure Through Bandwidth-Efficient Sync</h3>
+<p>A delta is basically the smallest possible set of operations needed to turn state A into state B. In a DVC wallet, that usually means: - Added credential references (e.g., <code>vc:health:2024-11-01</code>) - Updated consent vectors - Revocation markers - State machine transitions</p>
+<p>Instead of firing off raw JSON payloads, deltas get serialized, compressed, and cryptographically signed. Each one carries a Merkle root of the previous state, so you can verify everything without having to resend old historical data. This fits right into data minimization principles under GDPR, local privacy laws, and UNICEF’s Data Ethics Framework for Children.</p>
+<p>Vector clocks give you the temporal ordering you need to apply those deltas correctly. Unlike basic timestamps (which can drift or get tampered with), vector clocks assign a logical counter to every replica. When a device makes an update, it bumps its counter and sends that vector along with the delta. Once it lands, replicas merge the vectors using element-wise maximums, which keeps the causal relationships intact.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vector clock merge operation</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> merge_vector_clocks(vc1, vc2):</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    merged <span class="op">=</span> {}</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    all_nodes <span class="op">=</span> <span class="bu">set</span>(vc1.keys()) <span class="op">|</span> <span class="bu">set</span>(vc2.keys())</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> node <span class="kw">in</span> all_nodes:</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        merged[node] <span class="op">=</span> <span class="bu">max</span>(vc1.get(node, <span class="dv">0</span>), vc2.get(node, <span class="dv">0</span>))</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> merged</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This kind of deterministic merging means concurrent updates never get dropped or overwritten. Say a guardian changes an emergency contact while a clinic adds a vaccination record—both deltas apply in the right causal order. The system doesn’t have to guess which one is “right”; it just keeps both, since they’re covering different areas. For government programs working in low-bandwidth zones, delta propagation can shrink sync payloads by 70–90% compared to full-state replication. And that matters. GSMA’s State of the Industry Report on IoT Connectivity notes that mobile data costs in Sub-Saharan Africa are still 3–5× higher than in OECD countries. Cryptographic deltas tackle that constraint head-on, finally making DVC wallets practical for rural health workers, mobile educators, and community child protection agents.</p>
+</section>
+</section>
+<section id="event-sourcing-for-auditability-and-regulatory-compliance" class="level2">
+<h2 class="anchored" data-anchor-id="event-sourcing-for-auditability-and-regulatory-compliance">Event Sourcing for Auditability and Regulatory Compliance</h2>
+<p>In any child-centric identity system, transparency and accountability aren’t just nice extras—they’re non-negotiable. Every credential issuance, consent tweak, or state shift needs to be traceable. Event sourcing gives us a solid architectural pattern to handle exactly that. Instead of just storing the current state, the system keeps an immutable, append-only log of every state-changing event.</p>
+<p>Each event contains: - A unique identifier - A cryptographic hash of the previous event (forming a lightweight chain) - The actor’s DID and signature - A timestamp and vector clock reference - The semantic payload (e.g., <code>CREDENTIAL_ISSUED</code>, <code>CONSENT_REVOKED</code>, <code>STATE_TRANSITION</code>)</p>
+<p><em>Diagram description</em>: Visualize a vertical stack of blocks, each representing an event. The top block points to the current wallet state. Arrows flow downward, showing how replaying the event log reconstructs any historical state. A side panel shows a compliance dashboard querying the log for audit reports, with filters for sector, date range, and guardian authorization level.</p>
+<p>Event sourcing neatly separates storage from processing. Wallets can rebuild the current state locally just by replaying events, while auditors and regulators can check for compliance without ever touching raw personal data. This meshes well with the decentralized policy enforcement we looked at in [Decentralized Policy Enforcement for Minor DVC Access: OPA Integration, Real-Time Consent Auditing, and Context-Aware Attribute Release Controls — Discover how OPA enables dynamic access controls for minors’ digital credentials, ensuring real-time consent auditing and privacy-preserving data release. (url: posts/2026-05-05-decentralized-policy-enforcement-for-minor-dvc-access-opa-integration-real-time-consent-auditing-and-context-aware-attribute-release-controls/)], where policy decisions run against event-driven state instead of static profiles.</p>
+<p>Crucially, event sourcing also supports the right to erasure without breaking audit integrity. When a kid turns adult or a guardianship ends, the system can drop cryptographic tombstone events that logically strip access rights while keeping the historical chain intact. It hits regulatory requirements without sacrificing forensic capability—a balance that plenty of half-baked blockchain projects completely miss.</p>
+</section>
+<section id="interoperability-across-the-four-layers" class="level2">
+<h2 class="anchored" data-anchor-id="interoperability-across-the-four-layers">Interoperability Across the Four Layers</h2>
+<p>A technical fix is only as good as how well it plugs into the wider ecosystem. If guardian-child DVC wallets are actually going to scale, we’ve got to tackle interoperability across four areas: technical, semantic, organizational, and policy.</p>
+<p><strong>Technical Interoperability</strong>: CRDTs, delta propagation, and vector clocks rely on open standards. W3C Verifiable Credentials, DID Core, and DIDComm provide the foundational protocols. Wallets should support pluggable storage backends (SQLite, Realm, or lightweight IPFS pinning) and expose sync endpoints via standard HTTP/2 or WebSocket interfaces. Avoid vendor lock-in by prioritizing open-source implementations like <code>crdt-js</code>, <code>yjs</code>, or <code>Rust-based automerge</code>.</p>
+<p><strong>Semantic Interoperability</strong>: Credentials must speak a common language. JSON-LD context files, schema.org extensions, and sector-specific standards (HL7 FHIR for health, IMS Global for education, UNICEF’s Child Protection Data Standards) ensure that a birth credential issued by a civil registry is understood by a school enrollment system. The [Civil Registry Integration for Minor Identity: Technical Workflows, W3C Schema Design, and Selective Disclosure in Birth Credential Issuance — Technical guide to issuing W3C Verifiable Credentials for minor birth records. Covers JSON-LD schema design, selective disclosure, and privacy standards. (url: posts/2026-05-03-civil-registry-integration-for-minor-identity-technical-workflows-w3c-schema-design-and-selective-disclosure-in-birth-credential-issuance/)] demonstrates how standardized schemas reduce friction across administrative boundaries.</p>
+<p><strong>Organizational Interoperability</strong>: Government agencies, UN programmes, and civil society partners must agree on data sharing agreements, role definitions, and escalation paths. A guardian’s wallet should not be a silo; it must interoperate with health information exchanges, social protection registries, and education management information systems (EMIS). Cross-sector working groups, modeled after the Global Digital Compact, can establish trust frameworks and dispute resolution mechanisms.</p>
+<p><strong>Policy Interoperability</strong>: Data protection laws vary by jurisdiction, but core principles remain consistent: purpose limitation, data minimization, accountability, and child-centric consent. Policy engines like Open Policy Agent (OPA) can evaluate sync requests against local regulations before applying deltas. This ensures that a credential update valid in one province does not violate privacy laws in another.</p>
+<p>Tackle all four layers, and governments can sidestep that classic trap of building something technically brilliant but politically impossible to deploy. Open standards and clear governance build the kind of multi-stakeholder trust you actually need for long-term adoption.</p>
+</section>
+<section id="human-rights-and-data-protection-by-design" class="level2">
+<h2 class="anchored" data-anchor-id="human-rights-and-data-protection-by-design">Human Rights and Data Protection by Design</h2>
+<p>Tech should serve rights, not steamroll them. The UNCRC, the UN Guidelines on Business and Human Rights, and regional frameworks like the African Union’s Convention on Cyber Security and Personal Data Protection all point to the same baseline: kids’ data needs extra protection. Offline-first DVC architectures have to bake those safeguards in from day one.</p>
+<p><strong>Privacy by Design</strong>: Delta propagation and CRDTs inherently limit data exposure. Only metadata and status changes traverse the network. Raw credential content remains local, encrypted with hardware-backed keys. As detailed in [Trusted Execution Environments for Minor DVC Wallets: Hardware-Backed Key Isolation, Enclave-Based Presentation Runtimes, and Developmental Access Control Policies — Secure minors’ digital wallets with TEEs, hardware-backed key isolation, and developmental access controls for compliant, privacy-preserving identity. (url: posts/2026-05-05-trusted-execution-environments-for-minor-dvc-wallets-hardware-backed-key-isolation-enclave-based-presentation-runtimes-and-developmental-access-control-policies/)], isolating cryptographic material prevents extraction even if devices are compromised.</p>
+<p><strong>Evolving Consent</strong>: Children’s capacity to consent changes with age and cognitive development. State machines can encode developmental thresholds, automatically restricting or expanding data access as the child matures. Zero-knowledge guardianship attestation, as explored in [Zero-Knowledge Guardianship Attestation: Cryptographic Proofs of Relationship, Selective Disclosure of Authority, and Privacy-Preserving Guardian Verification in Minor DVCs — Explore zero-knowledge guardianship attestation for minor DVCs. Learn how cryptographic proofs and selective disclosure verify authority while preserving child privacy. (url: posts/2026-05-05-zero-knowledge-guardianship-attestation-cryptographic-proofs-of-relationship-selective-disclosure-of-authority-and-privacy-preserving-guardian-verification-in-minor-dvcs/)], allows guardians to prove authority without revealing sensitive family structures.</p>
+<p><strong>Forward Security &amp; Quantum Readiness</strong>: Long-term identity systems must anticipate cryptographic evolution. Hybrid signature schemes and algorithm agility ensure that sync deltas remain secure as computational threats advance. The [Post-Quantum Cryptographic Migration for Minor Identities: Algorithm Agility, Hybrid Signature Schemes, and Forward-Secure DID Key Rotation — Secure children’s digital identities against quantum threats with hybrid signatures, algorithm agility, and forward-secure DID key rotation for long-term privacy. (url: posts/2026-05-05-post-quantum-cryptographic-migration-for-minor-identities-algorithm-agility-hybrid-signature-schemes-and-forward-secure-did-key-rotation/)] outlines migration pathways that preserve backward compatibility while future-proofing sync protocols.</p>
+<p>When governments treat data protection as a core architectural constraint instead of just another compliance box to tick, they end up building systems that caregivers and kids can actually trust. And that trust? It’s the bedrock of any effective digital public service.</p>
+</section>
+<section id="implementation-roadmap-for-government-and-un-programmes" class="level2">
+<h2 class="anchored" data-anchor-id="implementation-roadmap-for-government-and-un-programmes">Implementation Roadmap for Government and UN Programmes</h2>
+<p>Moving away from legacy identity systems toward offline-first, CRDT-backed DVC wallets takes a phased, evidence-backed approach. Here’s a practical roadmap built for policy makers, ICT4D specialists, and programme directors:</p>
+<ol type="1">
+<li><strong>Conduct a Connectivity &amp; Data Audit</strong>: Map network availability across target regions. Identify sync failure rates, bandwidth constraints, and device capabilities. Use this data to size delta payloads and select appropriate CRDT primitives.</li>
+<li><strong>Standardize on Open Protocols</strong>: Adopt W3C VC Data Model, DID Core, and DIDComm Messaging. Avoid proprietary ledger solutions. Prioritize open-source libraries with active maintainer communities.</li>
+<li><strong>Prototype State Machines</strong>: Model the child journey across your primary sectors (health, CRVS, education, social protection). Validate transitions with legal teams to ensure compliance with local data laws and UNCRC principles.</li>
+<li><strong>Deploy Pilot Wallets with Delta Sync</strong>: Roll out guardian-child wallet pairs in low-connectivity zones. Monitor convergence metrics, delta sizes, and conflict resolution success rates. Iterate based on field feedback.</li>
+<li><strong>Integrate Policy Engines</strong>: Embed OPA or equivalent rule evaluators to enforce consent policies during sync. Ensure that delta application respects jurisdictional boundaries and developmental thresholds.</li>
+<li><strong>Establish Cross-Sector Governance</strong>: Form an interoperability working group with civil registry, health, education, and child protection representatives. Define data sharing agreements, audit procedures, and dispute resolution pathways.</li>
+<li><strong>Plan for Key Rotation &amp; Adulthood Transition</strong>: Implement time-locked key rotation and automated state transitions for age-of-majority handoffs. Test migration workflows under simulated network partitions.</li>
+</ol>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 27%">
+<col style="width: 32%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Phase</th>
+<th>Key Deliverable</th>
+<th>Responsible Actors</th>
+<th>Success Metric</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1–2</td>
+<td>Connectivity audit &amp; protocol selection</td>
+<td>ICT4D specialists, UN tech advisors</td>
+<td>&lt;5% sync failure rate in pilot zones</td>
+</tr>
+<tr class="even">
+<td>3–4</td>
+<td>State machine prototype &amp; delta sync rollout</td>
+<td>Gov digital ID teams, open-source devs</td>
+<td>95% CRDT convergence within 24h of reconnection</td>
+</tr>
+<tr class="odd">
+<td>5–6</td>
+<td>Policy engine integration &amp; governance framework</td>
+<td>Legal advisors, child protection agencies</td>
+<td>100% audit trail compliance, zero unauthorized disclosures</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>Key rotation &amp; adulthood transition automation</td>
+<td>Cryptography teams, DVC wallet vendors</td>
+<td>&lt;2% transition error rate, seamless control handoff</td>
+</tr>
+</tbody>
+</table>
+<p>This roadmap tries to balance technical rigor with what’s actually feasible on the ground. By tying each phase to measurable outcomes, governments can show both citizens and donors that they’re being accountable.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Keeping guardian-child DVC wallets in sync across spotty networks isn’t some abstract academic exercise anymore—it’s a practical must for inclusive digital public infrastructure. By leaning on conflict-free replicated data types, offline-first state machines, and cryptographically secure delta propagation, governments can actually build identity systems that honor child rights, keep data exposure to a minimum, and stay compliant. These setups don’t need expensive consensus mechanisms or a flawless internet connection. They just rely on open standards, deterministic merging, and privacy-focused design patterns that distributed systems engineers have been using for years.</p>
+<p>For policy makers and UN programme specialists, the path ahead is pretty straightforward: push for interoperability across technical, semantic, organizational, and policy layers; bake data protection into the design from the start; and treat connectivity as a constraint to work around, not a magic wand you wait for. The tools are ready. The standards are solid. And the human rights imperative? It’s urgent. Figuring out <strong>how to synchronize guardian child DVC wallets offline</strong> isn’t just a technical checkpoint—it’s a promise to leave no kid behind in the digital age. With a bit of careful planning, open collaboration, and rights-centered design, we’ll see a future where every child’s digital identity moves with them: secure, synced, and sovereign, no matter how shaky the network happens to be.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/merlos\.github\.io\/dvc4c\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
