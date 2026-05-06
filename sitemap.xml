@@ -2,86 +2,90 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://merlos.github.io/dvc4c/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.897Z</lastmod>
+    <lastmod>2026-05-06T05:37:19.499Z</lastmod>
   </url>
   <url>
     <loc>https://merlos.github.io/dvc4c/posts/2026-05-04-orchestrating-the-health-to-crvs-continuum-secure-interoperability-patterns-and-event-driven-credential-issuance-for-minor-digital-identity/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.898Z</lastmod>
+    <lastmod>2026-05-06T05:37:19.500Z</lastmod>
   </url>
   <url>
     <loc>https://merlos.github.io/dvc4c/posts/2026-05-04-architecting-the-minor-centric-dvc-ecosystem-a-technical-survey-of-standards-privacy-mechanisms-and-governance-frameworks/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.897Z</lastmod>
+    <lastmod>2026-05-06T05:37:19.499Z</lastmod>
   </url>
   <url>
     <loc>https://merlos.github.io/dvc4c/posts/2026-05-03-bootstrapping-trust-technical-foundations-and-architectural-patterns-for-digital-verifiable-credentials-in-minor-centric-ecosystems/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.897Z</lastmod>
-  </url>
-  <url>
-    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-resilient-key-management-for-minor-identities-threshold-cryptography-social-recovery-patterns-and-long-term-did-sustainability/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.899Z</lastmod>
-  </url>
-  <url>
-    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-synchronizing-guardian-child-dvc-wallets-conflict-free-replicated-data-types-crdts-offline-first-state-machines-and-cryptographically-secure-delta-propagation/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.899Z</lastmod>
-  </url>
-  <url>
-    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-optimizing-verifiable-presentation-exchange-for-minors-lightweight-cryptography-bandwidth-efficient-protocols-and-edge-wallet-deployment/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.898Z</lastmod>
-  </url>
-  <url>
-    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-zero-knowledge-guardianship-attestation-cryptographic-proofs-of-relationship-selective-disclosure-of-authority-and-privacy-preserving-guardian-verification-in-minor-dvcs/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.900Z</lastmod>
-  </url>
-  <url>
-    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-zero-knowledge-revocation-accumulators-for-minor-dvcs-privacy-preserving-status-verification-efficient-witness-updates-and-scalable-credential-lifecycle-management/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.900Z</lastmod>
-  </url>
-  <url>
-    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-cryptographic-age-proofs-implementing-bbs-signatures-and-range-proofs-for-privacy-preserving-minor-verification/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.898Z</lastmod>
-  </url>
-  <url>
-    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-trusted-execution-environments-for-minor-dvc-wallets-hardware-backed-key-isolation-enclave-based-presentation-runtimes-and-developmental-access-control-policies/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.900Z</lastmod>
-  </url>
-  <url>
-    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-oid4vc-implementation-for-minor-identities-guardian-assisted-authorization-flows-dynamic-scope-negotiation-and-secure-token-exchange-patterns/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.898Z</lastmod>
-  </url>
-  <url>
-    <loc>https://merlos.github.io/dvc4c/posts/2026-05-03-civil-registry-integration-for-minor-identity-technical-workflows-w3c-schema-design-and-selective-disclosure-in-birth-credential-issuance/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.897Z</lastmod>
-  </url>
-  <url>
-    <loc>https://merlos.github.io/dvc4c/posts/2026-05-04-engineering-dynamic-verifiable-credentials-for-minors-secure-update-mechanisms-versioning-strategies-and-automated-consent-evolution-workflows/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.898Z</lastmod>
-  </url>
-  <url>
-    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-automating-the-age-of-majority-transition-time-locked-key-rotation-state-machine-transitions-for-control-transfer-and-zero-knowledge-proof-of-adulthood-in-minor-dvc-wallets/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.898Z</lastmod>
-  </url>
-  <url>
-    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-verifier-side-optimization-for-minor-credential-networks-dns-based-did-resolution-edge-caching-strategies-and-low-latency-status-propagation/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.900Z</lastmod>
-  </url>
-  <url>
-    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-post-quantum-cryptographic-migration-for-minor-identities-algorithm-agility-hybrid-signature-schemes-and-forward-secure-did-key-rotation/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.899Z</lastmod>
+    <lastmod>2026-05-06T05:37:19.499Z</lastmod>
   </url>
   <url>
     <loc>https://merlos.github.io/dvc4c/posts/2026-05-03-centralized-dvc-implementation-for-degree-attestation-technical-strategies-for-high-volume-issuance-revocation-management-and-verification-endpoints/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.897Z</lastmod>
+    <lastmod>2026-05-06T05:37:19.499Z</lastmod>
+  </url>
+  <url>
+    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-post-quantum-cryptographic-migration-for-minor-identities-algorithm-agility-hybrid-signature-schemes-and-forward-secure-did-key-rotation/index.html</loc>
+    <lastmod>2026-05-06T05:37:19.501Z</lastmod>
+  </url>
+  <url>
+    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-verifier-side-optimization-for-minor-credential-networks-dns-based-did-resolution-edge-caching-strategies-and-low-latency-status-propagation/index.html</loc>
+    <lastmod>2026-05-06T05:37:19.502Z</lastmod>
+  </url>
+  <url>
+    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-automating-the-age-of-majority-transition-time-locked-key-rotation-state-machine-transitions-for-control-transfer-and-zero-knowledge-proof-of-adulthood-in-minor-dvc-wallets/index.html</loc>
+    <lastmod>2026-05-06T05:37:19.500Z</lastmod>
+  </url>
+  <url>
+    <loc>https://merlos.github.io/dvc4c/posts/2026-05-04-engineering-dynamic-verifiable-credentials-for-minors-secure-update-mechanisms-versioning-strategies-and-automated-consent-evolution-workflows/index.html</loc>
+    <lastmod>2026-05-06T05:37:19.500Z</lastmod>
+  </url>
+  <url>
+    <loc>https://merlos.github.io/dvc4c/posts/2026-05-03-civil-registry-integration-for-minor-identity-technical-workflows-w3c-schema-design-and-selective-disclosure-in-birth-credential-issuance/index.html</loc>
+    <lastmod>2026-05-06T05:37:19.499Z</lastmod>
+  </url>
+  <url>
+    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-oid4vc-implementation-for-minor-identities-guardian-assisted-authorization-flows-dynamic-scope-negotiation-and-secure-token-exchange-patterns/index.html</loc>
+    <lastmod>2026-05-06T05:37:19.501Z</lastmod>
+  </url>
+  <url>
+    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-trusted-execution-environments-for-minor-dvc-wallets-hardware-backed-key-isolation-enclave-based-presentation-runtimes-and-developmental-access-control-policies/index.html</loc>
+    <lastmod>2026-05-06T05:37:19.502Z</lastmod>
+  </url>
+  <url>
+    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-cryptographic-age-proofs-implementing-bbs-signatures-and-range-proofs-for-privacy-preserving-minor-verification/index.html</loc>
+    <lastmod>2026-05-06T05:37:19.500Z</lastmod>
+  </url>
+  <url>
+    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-zero-knowledge-revocation-accumulators-for-minor-dvcs-privacy-preserving-status-verification-efficient-witness-updates-and-scalable-credential-lifecycle-management/index.html</loc>
+    <lastmod>2026-05-06T05:37:19.503Z</lastmod>
+  </url>
+  <url>
+    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-zero-knowledge-guardianship-attestation-cryptographic-proofs-of-relationship-selective-disclosure-of-authority-and-privacy-preserving-guardian-verification-in-minor-dvcs/index.html</loc>
+    <lastmod>2026-05-06T05:37:19.503Z</lastmod>
+  </url>
+  <url>
+    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-optimizing-verifiable-presentation-exchange-for-minors-lightweight-cryptography-bandwidth-efficient-protocols-and-edge-wallet-deployment/index.html</loc>
+    <lastmod>2026-05-06T05:37:19.501Z</lastmod>
+  </url>
+  <url>
+    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-synchronizing-guardian-child-dvc-wallets-conflict-free-replicated-data-types-crdts-offline-first-state-machines-and-cryptographically-secure-delta-propagation/index.html</loc>
+    <lastmod>2026-05-06T05:37:19.502Z</lastmod>
+  </url>
+  <url>
+    <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-resilient-key-management-for-minor-identities-threshold-cryptography-social-recovery-patterns-and-long-term-did-sustainability/index.html</loc>
+    <lastmod>2026-05-06T05:37:19.501Z</lastmod>
+  </url>
+  <url>
+    <loc>https://merlos.github.io/dvc4c/posts/2026-05-06-biometric-template-protection-in-minor-dvc-wallets-cancelable-biometrics-homomorphic-encryption-and-template-rotation-strategies-for-immutable-traits/index.html</loc>
+    <lastmod>2026-05-06T05:37:19.503Z</lastmod>
   </url>
   <url>
     <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-runtime-verification-and-specification-driven-security-for-minor-dvcs-contract-checking-invariant-monitoring-and-automated-compliance-auditing/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.899Z</lastmod>
+    <lastmod>2026-05-06T05:37:19.502Z</lastmod>
   </url>
   <url>
     <loc>https://merlos.github.io/dvc4c/posts/2026-05-05-decentralized-policy-enforcement-for-minor-dvc-access-opa-integration-real-time-consent-auditing-and-context-aware-attribute-release-controls/index.html</loc>
-    <lastmod>2026-05-05T14:18:17.898Z</lastmod>
+    <lastmod>2026-05-06T05:37:19.500Z</lastmod>
   </url>
   <url>
     <loc>https://merlos.github.io/dvc4c/about.html</loc>
-    <lastmod>2026-05-05T14:18:17.897Z</lastmod>
+    <lastmod>2026-05-06T05:37:19.499Z</lastmod>
   </url>
 </urlset>
