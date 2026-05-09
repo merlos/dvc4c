@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-05-10">
+<meta name="keywords" content="verifiable credentials for children, digital identity for minors, W3C verifiable credentials, zero knowledge proofs privacy, child data protection, proxy holder governance, decentralized identifiers government, open source identity standards">
+<meta name="description" content="Build child-centric digital IDs using verifiable credentials. Covers W3C standards, proxy governance, zero-knowledge proofs, and data minimization.">
+
+<title>Verifiable Credentials for Children: Technical Foundations – Digital Verifiable Credentials for Children</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-74066ca329e1ac19c53faf31dafc0aff.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Digital Verifiable Credentials for Children</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-urgency-digital-identity-as-a-gateway-to-rights" id="toc-the-urgency-digital-identity-as-a-gateway-to-rights" class="nav-link active" data-scroll-target="#the-urgency-digital-identity-as-a-gateway-to-rights">The Urgency: Digital Identity as a Gateway to Rights</a></li>
+  <li><a href="#anatomy-of-a-verifiable-credential-for-minors" id="toc-anatomy-of-a-verifiable-credential-for-minors" class="nav-link" data-scroll-target="#anatomy-of-a-verifiable-credential-for-minors">Anatomy of a Verifiable Credential for Minors</a>
+  <ul class="collapse">
+  <li><a href="#key-actors-and-shifting-roles" id="toc-key-actors-and-shifting-roles" class="nav-link" data-scroll-target="#key-actors-and-shifting-roles">Key Actors and Shifting Roles</a></li>
+  <li><a href="#the-proxy-holder-dilemma" id="toc-the-proxy-holder-dilemma" class="nav-link" data-scroll-target="#the-proxy-holder-dilemma">The Proxy Holder Dilemma</a></li>
+  </ul></li>
+  <li><a href="#technical-foundations-data-models-and-interoperability" id="toc-technical-foundations-data-models-and-interoperability" class="nav-link" data-scroll-target="#technical-foundations-data-models-and-interoperability">Technical Foundations: Data Models and Interoperability</a>
+  <ul class="collapse">
+  <li><a href="#w3c-standards-and-json-ld" id="toc-w3c-standards-and-json-ld" class="nav-link" data-scroll-target="#w3c-standards-and-json-ld">W3C Standards and JSON-LD</a></li>
+  <li><a href="#the-four-layers-of-interoperability" id="toc-the-four-layers-of-interoperability" class="nav-link" data-scroll-target="#the-four-layers-of-interoperability">The Four Layers of Interoperability</a></li>
+  </ul></li>
+  <li><a href="#privacy-consent-and-the-childs-lifecycle" id="toc-privacy-consent-and-the-childs-lifecycle" class="nav-link" data-scroll-target="#privacy-consent-and-the-childs-lifecycle">Privacy, Consent, and the Child’s Lifecycle</a>
+  <ul class="collapse">
+  <li><a href="#proxy-holders-and-evolving-capacity" id="toc-proxy-holders-and-evolving-capacity" class="nav-link" data-scroll-target="#proxy-holders-and-evolving-capacity">Proxy Holders and Evolving Capacity</a></li>
+  <li><a href="#data-minimization-and-zero-knowledge-proofs" id="toc-data-minimization-and-zero-knowledge-proofs" class="nav-link" data-scroll-target="#data-minimization-and-zero-knowledge-proofs">Data Minimization and Zero-Knowledge Proofs</a></li>
+  </ul></li>
+  <li><a href="#architecture-and-security-trust-in-government-systems" id="toc-architecture-and-security-trust-in-government-systems" class="nav-link" data-scroll-target="#architecture-and-security-trust-in-government-systems">Architecture and Security: Trust in Government Systems</a>
+  <ul class="collapse">
+  <li><a href="#authoritative-anchors-and-key-management" id="toc-authoritative-anchors-and-key-management" class="nav-link" data-scroll-target="#authoritative-anchors-and-key-management">Authoritative Anchors and Key Management</a></li>
+  <li><a href="#cybersecurity-and-resilience" id="toc-cybersecurity-and-resilience" class="nav-link" data-scroll-target="#cybersecurity-and-resilience">Cybersecurity and Resilience</a></li>
+  </ul></li>
+  <li><a href="#actionable-recommendations-for-implementation" id="toc-actionable-recommendations-for-implementation" class="nav-link" data-scroll-target="#actionable-recommendations-for-implementation">Actionable Recommendations for Implementation</a>
+  <ul class="collapse">
+  <li><a href="#the-path-forward" id="toc-the-path-forward" class="nav-link" data-scroll-target="#the-path-forward">The Path Forward</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Verifiable Credentials for Children: Technical Foundations</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Digital Identity</div>
+    <div class="quarto-category">Child Rights</div>
+    <div class="quarto-category">Open Standards</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Build child-centric digital IDs using verifiable credentials. Covers W3C standards, proxy governance, zero-knowledge proofs, and data minimization.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ian Merlos </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 10, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+<div>
+  <div class="keywords">
+    <div class="block-title">Keywords</div>
+    <p>verifiable credentials for children, digital identity for minors, W3C verifiable credentials, zero knowledge proofs privacy, child data protection, proxy holder governance, decentralized identifiers government, open source identity standards</p>
+  </div>
+</div>
+
+</header>
+
+
+<p>Picture a mother at a rural clinic, trying to prove her child’s vaccination status so they can finally start school. The immunization records? Locked away in an outdated government database. The birth certificate? Sitting in a filing cabinet back at the district office. Meanwhile, the school’s enrollment system demands a digital file the clinic just can’t generate. Suddenly, that child becomes practically invisible to the education sector—facing delayed enrollment, missed health interventions, and a rocky start to life. And this isn’t some rare exception. It’s the everyday reality for millions of kids in developing regions.</p>
+<p>Pulling off <strong>verifiable credentials for children</strong> means building a technical architecture that carefully balances <strong>digital identity for minors</strong> with rock-solid <strong>data protection</strong>, privacy safeguards, and basic human rights. With governments and UN agencies racing to digitize public services, the real question has shifted. It’s no longer <em>whether</em> we should use digital credentials—it’s <em>how</em> we build systems that actually put kids first, from prenatal checkups right through to their first job. In this post, I’m laying out the technical groundwork for exactly that. We’ll walk through the data models, map out who’s involved, and break down the governance frameworks needed to deliver services that are interoperable, secure, and respectful of children’s rights.</p>
+<section id="the-urgency-digital-identity-as-a-gateway-to-rights" class="level2">
+<h2 class="anchored" data-anchor-id="the-urgency-digital-identity-as-a-gateway-to-rights">The Urgency: Digital Identity as a Gateway to Rights</h2>
+<p>Before we get into the technical weeds, let’s ground this in why it actually matters. UNICEF estimates that roughly two-thirds of kids under five don’t have a registered birth. That leaves them effectively invisible to their own governments, and dangerously exposed to exploitation, trafficking, and being shut out of basic services. A digital ID isn’t just paperwork for bureaucrats—it’s a front-row ticket to the rights promised in the Convention on the Rights of the Child (CRC).</p>
+<p>The problem? Most traditional digital ID systems just don’t cut it for kids. They tend to hoard data in centralized databases (which are basically bullseyes for hackers), refuse to talk to other sectors, or completely gloss over how consent actually works for minors. <strong>Verifiable Credentials (VCs)</strong> change the game. Built on open standards, VCs let us design child-friendly digital IDs where data moves with the person, can be verified without oversharing, and is managed through rules that actually grow alongside the child.</p>
+<blockquote class="blockquote">
+<p><strong>Key Insight:</strong> A child’s digital identity should be a key to opportunity, not a chain of surveillance. The architecture must prioritize data minimization, purpose limitation, and the child’s evolving capacity.</p>
+</blockquote>
+</section>
+<section id="anatomy-of-a-verifiable-credential-for-minors" class="level2">
+<h2 class="anchored" data-anchor-id="anatomy-of-a-verifiable-credential-for-minors">Anatomy of a Verifiable Credential for Minors</h2>
+<p>If we want to build services that actually work for kids, we first need to get comfortable with how the W3C’s Verifiable Credentials framework ticks. Think of a VC less like a row in a spreadsheet and more like a cryptographically sealed digital document—one that can be issued, safely stored, and checked by third parties without everyone needing to trust the same central server.</p>
+<section id="key-actors-and-shifting-roles" class="level3">
+<h3 class="anchored" data-anchor-id="key-actors-and-shifting-roles">Key Actors and Shifting Roles</h3>
+<p>The whole VC ecosystem revolves around three main players. When we’re talking about children, though, the dynamics get a lot more interesting—especially when it comes to who actually holds the credentials and how we handle consent.</p>
+<ol type="1">
+<li><strong>Issuer:</strong> The organization that mints and cryptographically signs the credential. In government setups, this is usually a ministry or agency that holds the official data. Think Civil Registration (birth certificates), the Ministry of Health (vaccination logs), or Education (academic records).</li>
+<li><strong>Holder:</strong> Whoever stores the credential and shows it to verifiers. For younger kids, this is almost always a <strong>proxy</strong>—a parent, guardian, or legal custodian. But as the child gets older and reaches the age of majority (or shows they’re ready to take charge), control needs to hand over to them. Managing that handoff is a huge part of governance.</li>
+<li><strong>Verifier:</strong> The party asking for proof to make a decision. This could be a school administrator checking enrollment eligibility, a social worker verifying benefits, or a doctor double-checking immunization records.</li>
+</ol>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Issuer [Government Issuers]
+        A1[Birth Registration]
+        A2[Health Ministry]
+        A3[Education Ministry]
+    end
+
+    subgraph Holder [Credential Holder Wallet]
+        H1[Child/Caregiver Wallet]
+        H2[Secure Storage]
+        H3[Consent Management]
+    end
+
+    subgraph Verifier [Service Verifiers]
+        V1[School Enrollment]
+        V2[Social Protection]
+        V3[Healthcare Access]
+    end
+
+    A1 --&gt;|Issues Signed VC| H1
+    A2 --&gt;|Issues Signed VC| H1
+    A3 --&gt;|Issues Signed VC| H1
+
+    H1 --&gt;|Presents Proof with Consent| V1
+    H1 --&gt;|Presents Proof with Consent| V2
+    H1 --&gt;|Presents Proof with Consent| V3
+
+    V1 --&gt;|Validates Signature &amp; Status| A1
+    V2 --&gt;|Validates Signature &amp; Status| A2
+    V3 --&gt;|Validates Signature &amp; Status| A3
+
+    style Holder fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    style Issuer fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    style Verifier fill:#fff3e0,stroke:#e65100,stroke-width:2px</code></pre>
+<p><em>Figure 1: Flow of Verifiable Credentials in a child-centric ecosystem. Notice that verification often involves checking the issuer’s public key and revocation status, ensuring trust without requiring the verifier to access the issuer’s database directly.</em></p>
+</section>
+<section id="the-proxy-holder-dilemma" class="level3">
+<h3 class="anchored" data-anchor-id="the-proxy-holder-dilemma">The Proxy Holder Dilemma</h3>
+<p>Here’s where things get tricky: the <strong>proxy holder</strong>. In most places, kids can’t legally own digital assets or give consent for data processing. So our systems have to support proxy relationships—letting a guardian step in and present credentials for them. But the architecture also needs a clean exit ramp: as the child grows up, that proxy access has to be revocable. Pulling that off takes flexible identity mappings and thoughtful lifecycle governance, which we’ll dig into next.</p>
+</section>
+</section>
+<section id="technical-foundations-data-models-and-interoperability" class="level2">
+<h2 class="anchored" data-anchor-id="technical-foundations-data-models-and-interoperability">Technical Foundations: Data Models and Interoperability</h2>
+<p>If government services are going to talk to each other across different sectors, we can’t afford to rely on walled gardens or proprietary file formats. We need to push for <strong>open standards</strong>. They keep systems interoperable, stop vendors from holding us hostage, and actually last. Right now, the W3C Verifiable Credentials Data Model v1.1 is the global go-to—it gives everyone a shared vocabulary to work from.</p>
+<section id="w3c-standards-and-json-ld" class="level3">
+<h3 class="anchored" data-anchor-id="w3c-standards-and-json-ld">W3C Standards and JSON-LD</h3>
+<p>You’ll usually see VCs formatted in JSON-LD (JavaScript Object Notation for Linked Data). It’s a neat little structure that keeps data organized while letting you link out to external vocabularies and contexts. That flexibility is exactly what makes semantic interoperability possible. Take a basic birth certificate, for instance. The snippet below shows how a credential spells out its type, who issued it, who it’s about, and what data it actually contains.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"@context"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://www.w3.org/2018/credentials/v1"</span><span class="ot">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://w3id.org/trace/vc-context"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"urn:uuid:3978344f-8596-4c3a-a978-8fcaba3903c5"</span><span class="fu">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"type"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"VerifiableCredential"</span><span class="ot">,</span> <span class="st">"BirthCertificateCredential"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"issuer"</span><span class="fu">:</span> <span class="st">"https://civil-registration.gov.example/issuers/birth"</span><span class="fu">,</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"issuanceDate"</span><span class="fu">:</span> <span class="st">"2023-10-15T08:30:00Z"</span><span class="fu">,</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"credentialSubject"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"did:gov:child:abc123xyz"</span><span class="fu">,</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"givenName"</span><span class="fu">:</span> <span class="st">"Amara"</span><span class="fu">,</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"familyName"</span><span class="fu">:</span> <span class="st">"Diallo"</span><span class="fu">,</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"dateOfBirth"</span><span class="fu">:</span> <span class="st">"2023-01-12"</span><span class="fu">,</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"placeOfBirth"</span><span class="fu">:</span> <span class="st">"Conakry, Guinea"</span><span class="fu">,</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"parentIds"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      <span class="st">"did:gov:parent:parent1"</span><span class="ot">,</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">"did:gov:parent:parent2"</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"proof"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"Ed25519Signature2018"</span><span class="fu">,</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"created"</span><span class="fu">:</span> <span class="st">"2023-10-15T08:30:00Z"</span><span class="fu">,</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"proofPurpose"</span><span class="fu">:</span> <span class="st">"assertionMethod"</span><span class="fu">,</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"verificationMethod"</span><span class="fu">:</span> <span class="st">"https://civil-registration.gov.example/keys/key-1"</span><span class="fu">,</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"jws"</span><span class="fu">:</span> <span class="st">"eyJhbGci..."</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Listing 1: Example of a Verifiable Credential in JSON-LD. The <code>@context</code> ensures that any verifier understands the meaning of properties like <code>givenName</code> or <code>dateOfBirth</code>. The <code>proof</code> section provides cryptographic assurance that the credential has not been tampered with and originates from the authoritative issuer.</em></p>
+</section>
+<section id="the-four-layers-of-interoperability" class="level3">
+<h3 class="anchored" data-anchor-id="the-four-layers-of-interoperability">The Four Layers of Interoperability</h3>
+<p>Rolling out VCs for kids means tackling interoperability on four different fronts. These layers come from the European Interoperability Framework, but they’ve been tweaked to fit development contexts:</p>
+<ol type="1">
+<li><strong>Technical Interoperability:</strong> Can the systems actually exchange data? This covers protocols (like DIDComm or OID4VCI), API standards, and secure transport methods. In low-resource settings, lightweight protocols and offline fallbacks are non-negotiable.</li>
+<li><strong>Semantic Interoperability:</strong> Do both sides mean the same thing when they say the same word? You need shared vocabularies and ontologies. A “vaccination” in the health database has to line up perfectly with “immunization status” in the education portal. Relying on W3C contexts and standard schemas (HL7 FHIR for health, Schema.org for general data) keeps everything from drifting apart.</li>
+<li><strong>Organizational Interoperability:</strong> How do the teams actually work together? Ministries need to agree on data-sharing rules, incident response plans, and who’s responsible for what. If a kid’s health data is being shared with schools for enrollment, those organizational lines have to be crystal clear.</li>
+<li><strong>Policy Interoperability:</strong> Does the law back it up? We’re talking data protection regulations, child rights frameworks, and cross-border recognition deals. The tech has to bend to policy decisions, like how long data gets kept or how consent is tracked.</li>
+</ol>
+<blockquote class="blockquote">
+<p><strong>Practical Tip:</strong> Start with a “Minimum Viable Interoperability” approach. Define a core set of credentials (e.g., Birth, Vaccination, School Enrollment) and a shared context before expanding to complex social protection or health records. This reduces risk and builds trust incrementally.</p>
+</blockquote>
+</section>
+</section>
+<section id="privacy-consent-and-the-childs-lifecycle" class="level2">
+<h2 class="anchored" data-anchor-id="privacy-consent-and-the-childs-lifecycle">Privacy, Consent, and the Child’s Lifecycle</h2>
+<p>Privacy is easily the thorniest part of building digital IDs for kids. Children are inherently vulnerable, and their data demands a higher wall of protection. That means baking privacy directly into the architecture from day one—keeping data collection to an absolute minimum, handling consent thoughtfully, and making sure the child’s rights shift naturally as they grow.</p>
+<section id="proxy-holders-and-evolving-capacity" class="level3">
+<h3 class="anchored" data-anchor-id="proxy-holders-and-evolving-capacity">Proxy Holders and Evolving Capacity</h3>
+<p>You can’t treat consent for kids as a simple yes-or-no switch. It has to mirror <strong>evolving capacity</strong>—the idea that a child’s ability to make decisions grows alongside their age and maturity. Technically, that means your systems need to handle:</p>
+<ul>
+<li><strong>Proxy Consent:</strong> Guardians step in to consent to data processing and show credentials on the kid’s behalf. The system needs to cryptographically tie that proxy relationship to the account so no one can piggyback on it.</li>
+<li><strong>Age-Gating and Graduated Autonomy:</strong> Hit certain milestones (say, 13, 16, or 18), and the system should automatically shift the reins. The kid might get their own cryptographic keys, while proxy access gets dialed back or revoked entirely.</li>
+<li><strong>Revoking Proxy Access:</strong> Life happens. Custody changes, guardians step down, or courts issue new orders. The system has to support smooth, legally compliant transfers of access.</li>
+</ul>
+<pre class="mermaid"><code>stateDiagram-v2
+    [*] --&gt; Prenatal: Birth Registration Initiated
+    Prenatal --&gt; Infant: Credential Issued to Proxy Holder
+    Infant --&gt; Child: Age 0-12; Proxy Control
+    Child --&gt; Adolescent: Age 13-17; Graduated Autonomy
+    Adolescent --&gt; Adult: Age 18+; Full Autonomy
+    
+    state Infant {
+        [*] --&gt; ProxyAccess
+        ProxyAccess --&gt; DataMinimization: ZKP Proofs
+    }
+    
+    state Child {
+        [*] --&gt; ProxyAccess
+        ProxyAccess --&gt; SharedControl: Child can view data
+    }
+    
+    state Adolescent {
+        [*] --&gt; SharedControl
+        SharedControl --&gt; ConsentRequired: Sensitive data requires child consent
+    }
+    
+    state Adult {
+        [*] --&gt; FullControl
+        FullControl --&gt; KeyRotation: Child manages keys
+    }
+    
+    Infant --&gt; Child: Age Trigger
+    Child --&gt; Adolescent: Age Trigger
+    Adolescent --&gt; Adult: Age Trigger</code></pre>
+<p><em>Figure 2: State diagram illustrating the lifecycle governance of a child’s digital identity. Transitions are triggered by age or legal capacity, shifting control from proxy to the individual.</em></p>
+</section>
+<section id="data-minimization-and-zero-knowledge-proofs" class="level3">
+<h3 class="anchored" data-anchor-id="data-minimization-and-zero-knowledge-proofs">Data Minimization and Zero-Knowledge Proofs</h3>
+<p>Over-collecting data is one of the biggest threats to kids’ privacy. Honestly, does a school really need to see a child’s entire medical file just to check their shots? No.&nbsp;They just need to know the kid is up to date. Enter <strong>Zero-Knowledge Proofs (ZKPs)</strong>.</p>
+<p>ZKPs let someone prove a claim is true without actually handing over the raw data. It works like this: * <em>Claim:</em> “The child has received all mandatory vaccines.” * <em>Proof:</em> A cryptographic check pulled straight from the vaccination credential. * <em>Result:</em> The verifier gets a simple <code>true</code> back. No vaccine names, no dates, no clinic details—just the confirmation they need.</p>
+<p>Running ZKPs does require wallet and verifier apps that can handle the math. It’s computationally heavy, sure, but thanks to progress in zk-SNARKs and zk-STARKs, it’s finally doable on standard smartphones. For developing regions, I’d suggest taking it in steps: start with selective disclosure (only showing the specific fields that matter) and graduate to full ZKPs once the underlying infrastructure can keep up.</p>
+<blockquote class="blockquote">
+<p><strong>Human Rights Note:</strong> Data minimization is not just a technical feature; it is a right. Excessive data collection increases the risk of profiling, discrimination, and harm. Systems must default to collecting and sharing only what is strictly necessary for the service.</p>
+</blockquote>
+</section>
+</section>
+<section id="architecture-and-security-trust-in-government-systems" class="level2">
+<h2 class="anchored" data-anchor-id="architecture-and-security-trust-in-government-systems">Architecture and Security: Trust in Government Systems</h2>
+<p>Sure, everyone loves to talk about blockchain and distributed ledgers when identity comes up. But for government systems handling kids’ data, the real priority has to be <strong>authoritative trust</strong>. The government isn’t just another node here—it’s the guardian of public interest and rights, so it needs to sit at the center of that trust.</p>
+<section id="authoritative-anchors-and-key-management" class="level3">
+<h3 class="anchored" data-anchor-id="authoritative-anchors-and-key-management">Authoritative Anchors and Key Management</h3>
+<p>In the VC world, trust is built on cryptography. Issuers keep a private key to sign credentials, while the public key floats out there for anyone to verify against. For government agencies, that means:</p>
+<ul>
+<li><strong>Key Management:</strong> These keys need to live in Hardware Security Modules (HSMs) or equally secure environments. Rotation policies should be strict—compromised keys are a nightmare to clean up.</li>
+<li><strong>Revocation:</strong> Credentials have to be revocable. If a birth record gets corrected or a credential is stolen, the issuer needs a way to pull the plug. Status lists (like the W3C Status List 2021) or OCSP work well here. And for offline areas? Cached status lists with clear expiry dates are a must.</li>
+<li><strong>Decentralized Identifiers (DIDs):</strong> DIDs let entities use IDs that don’t depend on a central registry. Government DIDs (think <code>did:gov:issuers:health</code>) can anchor trust without needing a blockchain. You can resolve them through local directories or distributed hash tables, depending on how your network is set up.</li>
+</ul>
+</section>
+<section id="cybersecurity-and-resilience" class="level3">
+<h3 class="anchored" data-anchor-id="cybersecurity-and-resilience">Cybersecurity and Resilience</h3>
+<p>Let’s be clear: cybersecurity isn’t optional here. A data breach involving kids can haunt them for decades. Your architecture needs to bake in: * <strong>End-to-End Encryption:</strong> Data moving between systems and data sitting idle on servers both need to be encrypted. * <strong>Secure Elements:</strong> Whenever possible, stash credentials in secure elements or trusted execution environments (TEEs) on the device itself. It makes extracting them nearly impossible. * <strong>Incident Response:</strong> You need a playbook. What happens if keys are compromised? If credentials get revoked? If data leaks? The plan should cover everything from notifying families to actually fixing the damage.</p>
+<blockquote class="blockquote">
+<p><strong>Open Source Advantage:</strong> Open-source solutions allow for community review, reducing the risk of hidden vulnerabilities. Projects like Hyperledger Aries, DIDComm, and OpenID Foundation standards provide battle-tested components that can be adapted to local contexts. Avoid proprietary black-box solutions that obscure security risks.</p>
+</blockquote>
+</section>
+</section>
+<section id="actionable-recommendations-for-implementation" class="level2">
+<h2 class="anchored" data-anchor-id="actionable-recommendations-for-implementation">Actionable Recommendations for Implementation</h2>
+<p>If you’re a policymaker or technical lead looking to get this off the ground, here’s a practical checklist to start building the foundation:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Recommendation</th>
+<th style="text-align: left;">Rationale</th>
+<th style="text-align: left;">Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Adopt W3C VC Standards</strong></td>
+<td style="text-align: left;">Ensures global interoperability and future-proofing.</td>
+<td style="text-align: left;">Reduces vendor lock-in; enables cross-border recognition.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Implement Proxy Governance</strong></td>
+<td style="text-align: left;">Addresses legal capacity of minors.</td>
+<td style="text-align: left;">Protects child rights; enables safe data handling by guardians.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Prioritize Data Minimization</strong></td>
+<td style="text-align: left;">Limits exposure of sensitive child data.</td>
+<td style="text-align: left;">Enhances privacy; reduces risk of profiling and discrimination.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Establish Interoperability Framework</strong></td>
+<td style="text-align: left;">Aligns technical, semantic, organizational, and policy layers.</td>
+<td style="text-align: left;">Enables seamless cross-sector services (health, edu, social).</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Invest in Key Management</strong></td>
+<td style="text-align: left;">Secures the root of trust.</td>
+<td style="text-align: left;">Prevents credential forgery and unauthorized issuance.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Engage Civil Society</strong></td>
+<td style="text-align: left;">Ensures solutions reflect community needs and rights.</td>
+<td style="text-align: left;">Builds trust; promotes inclusive design and accountability.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Plan for Lifecycle Transitions</strong></td>
+<td style="text-align: left;">Supports evolving capacity of the child.</td>
+<td style="text-align: left;">Ensures continuity of identity from childhood to adulthood.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Use Open Source Components</strong></td>
+<td style="text-align: left;">Leverages community expertise and transparency.</td>
+<td style="text-align: left;">Lowers costs; accelerates deployment; enhances security auditability.</td>
+</tr>
+</tbody>
+</table>
+<section id="the-path-forward" class="level3">
+<h3 class="anchored" data-anchor-id="the-path-forward">The Path Forward</h3>
+<p>Putting together verifiable credentials for kids isn’t a solo act. It takes real collaboration between government, tech builders, and civil society. It asks us to move away from isolated databases and toward systems that actually talk to each other. It means trading data hoarding for strict minimization, and swapping rigid, static IDs for flexible, rights-focused digital journeys that grow with the child.</p>
+<p>If we stick to open standards, lock down privacy, and plan for the whole lifecycle, we can build systems that actually empower kids instead of putting them at risk. The technical choices we make today will basically decide whether digital ID becomes a bridge to inclusion or another wall keeping people out. We owe it to every child to build architecture that respects their dignity—so their digital trail becomes a map of opportunity, not a ledger of vulnerability.</p>
+<p><strong>Optimistic Outlook:</strong> As we keep sharpening these technical foundations, I genuinely believe VCs will completely change the game for kids. We’re looking at a future where scattered, disconnected records finally weave together into a reliable safety net. That means every child—no matter where they’re born or what they’re up against—can actually get the healthcare, education, and support they need to thrive.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/merlos\.github\.io\/dvc4c\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
