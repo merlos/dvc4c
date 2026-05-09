@@ -6,7 +6,7 @@ date: "2026-05-06"
 categories: ["Digital Identity", "Cryptography", "Child Protection", "Government Technology"]
 tags: ["Multi-Party Computation", "Distributed Key Generation", "MuSig", "Verifiable Credentials", "Guardian Co-Signing", "Veto Mechanisms"]
 keywords: ["multi-party computation", "minor digital identity", "distributed key generation", "MuSig signature aggregation", "guardian co-signing", "verifiable credentials for children", "veto-based consent mechanisms", "child data privacy", "government DVC implementation", "threshold cryptography"]
-image: "A conceptual illustration of multiple guardians collaboratively generating cryptographic key shares, overlaid with a digital shield representing child privacy and secure identity management."
+image: "cover.png"
 draft: false
 ---
 
@@ -248,3 +248,4 @@ Multi-party computation really does offer a fresh way to tackle the security puz
 As we build these out, the focus has to stay on open standards, rock-solid security, and keeping communities in the loop. The future of kids’ digital identity isn’t just about fancy cryptography. It’s about designing systems that respect their rights, grow with them, and lay the groundwork for real empowerment. With MPC, we’ve finally got the right tools to make that vision a reality—creating a space where digital identity works for good, shields the vulnerable, and opens doors for everyone.
 
 *The integration of multi-party computation into minor DVC ecosystems marks a pivotal step toward resilient, rights-respecting digital infrastructure, promising a future where technology safeguards children's identities as seamlessly as it connects them to essential services.*
+
