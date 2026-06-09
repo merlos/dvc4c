@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-06-09">
+<meta name="keywords" content="decentralized identity minors, age-graded DID methods, dynamic cryptographic controls, child data privacy frameworks, verifiable credentials for children, guardian custody handoff, zero-knowledge age verification, government digital identity, state-transition algorithms, privacy by design">
+<meta name="description" content="Age-graded decentralized identifiers use dynamic crypto controls to align minor digital identity with developmental stages, ensuring privacy and compliance.">
+
+<title>Age-Graded DID Methods: Dynamic Control Schemes for Minors – Digital Verifiable Credentials for Children</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-9b3df793d2172a262c6f3ff75293c890.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background-image: url(cover.png);
+background-size: cover;
+      }
+</style>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Digital Verifiable Credentials for Children</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Age-Graded DID Methods: Dynamic Control Schemes for Minors</h1>
+                  <div>
+        <div class="description">
+          Age-graded decentralized identifiers use dynamic crypto controls to align minor digital identity with developmental stages, ensuring privacy and compliance.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">Digital Identity</div>
+                <div class="quarto-category">Cryptography</div>
+                <div class="quarto-category">Government Technology</div>
+                <div class="quarto-category">Data Privacy</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Ian Merlos </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">June 9, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+
+  <div>
+    <div class="keywords">
+      <div class="block-title">Keywords</div>
+      <p>decentralized identity minors, age-graded DID methods, dynamic cryptographic controls, child data privacy frameworks, verifiable credentials for children, guardian custody handoff, zero-knowledge age verification, government digital identity, state-transition algorithms, privacy by design</p>
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-developmental-imperative-why-static-identity-models-fail-children" id="toc-the-developmental-imperative-why-static-identity-models-fail-children" class="nav-link active" data-scroll-target="#the-developmental-imperative-why-static-identity-models-fail-children">The Developmental Imperative: Why Static Identity Models Fail Children</a></li>
+  <li><a href="#core-architecture-of-age-graded-decentralized-identifiers" id="toc-core-architecture-of-age-graded-decentralized-identifiers" class="nav-link" data-scroll-target="#core-architecture-of-age-graded-decentralized-identifiers">Core Architecture of Age-Graded Decentralized Identifiers</a>
+  <ul class="collapse">
+  <li><a href="#state-transition-algorithms-for-developmental-milestones" id="toc-state-transition-algorithms-for-developmental-milestones" class="nav-link" data-scroll-target="#state-transition-algorithms-for-developmental-milestones">State-Transition Algorithms for Developmental Milestones</a></li>
+  <li><a href="#incremental-guardian-to-self-custody-handoffs" id="toc-incremental-guardian-to-self-custody-handoffs" class="nav-link" data-scroll-target="#incremental-guardian-to-self-custody-handoffs">Incremental Guardian-to-Self Custody Handoffs</a></li>
+  </ul></li>
+  <li><a href="#compliance-with-emerging-youth-data-protection-frameworks" id="toc-compliance-with-emerging-youth-data-protection-frameworks" class="nav-link" data-scroll-target="#compliance-with-emerging-youth-data-protection-frameworks">Compliance with Emerging Youth Data Protection Frameworks</a></li>
+  <li><a href="#implementation-patterns-secure-automated-privilege-escalation" id="toc-implementation-patterns-secure-automated-privilege-escalation" class="nav-link" data-scroll-target="#implementation-patterns-secure-automated-privilege-escalation">Implementation Patterns: Secure Automated Privilege Escalation</a>
+  <ul class="collapse">
+  <li><a href="#pattern-context-aware-credential-release-with-state-evaluation" id="toc-pattern-context-aware-credential-release-with-state-evaluation" class="nav-link" data-scroll-target="#pattern-context-aware-credential-release-with-state-evaluation">Pattern: Context-Aware Credential Release with State Evaluation</a></li>
+  </ul></li>
+  <li><a href="#interoperability-across-government-sectors" id="toc-interoperability-across-government-sectors" class="nav-link" data-scroll-target="#interoperability-across-government-sectors">Interoperability Across Government Sectors</a></li>
+  <li><a href="#actionable-takeaways-for-policy-and-implementation" id="toc-actionable-takeaways-for-policy-and-implementation" class="nav-link" data-scroll-target="#actionable-takeaways-for-policy-and-implementation">Actionable Takeaways for Policy and Implementation</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>How do we actually build digital identity systems that grow alongside a child, instead of shoehorning them into rigid, adult-centric architectures that break down during adolescence or create privacy nightmares in early childhood? That’s really the heart of what government digital services are struggling with right now. Most traditional identity registries treat a newborn, a ten-year-old in school, and an eighteen-year-old starting work as the exact same cryptographic entity. They slap on uniform consent models, inflexible data retention rules, and simple on/off control switches that completely ignore how kids actually develop. And what happens? You get fractured service access, unnecessary data exposure, and bureaucratic bottlenecks that hit vulnerable populations the hardest. Age-graded DID methods for minors flip this on its head. They use dynamic cryptographic controls that automatically tweak key management, data release rules, and verification workflows as a kid matures. When you align the tech with how kids actually think and the legal frameworks around them, governments can roll out smooth, privacy-first services across health, education, social care, and civil registration—all without sacrificing child rights or blowing out operational costs.</p>
+<section id="the-developmental-imperative-why-static-identity-models-fail-children" class="level2">
+<h2 class="anchored" data-anchor-id="the-developmental-imperative-why-static-identity-models-fail-children">The Developmental Imperative: Why Static Identity Models Fail Children</h2>
+<p>Let’s be honest: childhood isn’t just one flat state. It’s a rolling continuum where capacity grows, legal rights shift, and autonomy slowly kicks in. Yet most digital identity systems still treat minors like a single, monolithic bucket. You issue a static decentralized identifier (DID) at birth, and it usually locks a single set of verification keys to a rigid policy doc. A guardian holds all the reins until some arbitrary age cutoff—usually eighteen—triggers a clunky manual or automated handoff. That all-or-nothing approach tends to trip over three major failures:</p>
+<ol type="1">
+<li><strong>Service Fragmentation:</strong> Think about a kid moving from pediatric care to adolescent health, or jumping from primary to secondary school. Usually, they need entirely new credentials or manual policy overrides. Government departments end up working in silos because the underlying identity system just can’t handle nuanced, age-based access rules.</li>
+<li><strong>Privacy Overexposure:</strong> Static systems often default to dumping maximum data just to make verification easier. That goes straight against data minimization principles and leaves minors open to long-term tracking. (As UNICEF pointed out in their 2022 report on data protection, kids’ digital footprints should match their developmental stage and be strictly limited to what’s actually needed for the service.)</li>
+<li><strong>Operational Friction:</strong> Manual consent workflows and those sudden control transfers at eighteen create massive administrative traffic jams. In low-resource areas where digital literacy and internet access are spotty, those bottlenecks don’t just cause delays—they mean denied benefits, missed health interventions, or kids who never get properly registered.</li>
+</ol>
+<p>Age-graded DID methods fix this by baking developmental awareness straight into the crypto layer. Instead of relying on one static key pair, the system runs a state machine that checks verified milestones—like birth registration, school enrollment, age proofs, or legal capacity attestations—and tweaks the controls accordingly. The DID itself stays immutable and globally resolvable, but the verification methods, policy rules, and custody weights shift predictably as time goes on. It’s a clean match with the UN Guidelines on Data Protection for Children, which basically demand privacy by design, strict purpose limitation, and consent that actually matches a kid’s capacity.</p>
+</section>
+<section id="core-architecture-of-age-graded-decentralized-identifiers" class="level2">
+<h2 class="anchored" data-anchor-id="core-architecture-of-age-graded-decentralized-identifiers">Core Architecture of Age-Graded Decentralized Identifiers</h2>
+<p>Under the hood, an age-graded DID method basically extends the W3C Decentralized Identifier specification by tying dynamic policy rules directly to the DID Document. Think of the DID Document as the authoritative metadata registry—it maps the identifier to verification methods (the crypto keys), authentication schemes, and service endpoints. Normally, you’d update this document rarely, and it’d take explicit authorization to change anything. With an age-graded model, though, the document handles scheduled, verifiable transitions that are steered by a state-transition algorithm.</p>
+<p>The whole setup rests on three main pieces: - <strong>A Stable DID Method:</strong> Usually government-anchored (like <code>did:gov:crvs:child123</code>), so a trusted party can keep the registry tidy without leaning on permissionless blockchains. - <strong>Dynamic Verification Methods:</strong> You register multiple key sets, each tagged for a specific purpose (<code>authentication</code>, <code>assertionMethod</code>, <code>keyAgreement</code>). Every set ties to a developmental stage and gets activated or deactivated as the policy engine evaluates things. - <strong>A Policy Evaluation Engine:</strong> Tucked inside the wallet or verifier endpoint, this component checks milestone credentials, time-based triggers, and legal thresholds to figure out what control parameters should be active.</p>
+<p>This setup keeps all the usual perks of decentralized identity—user control, crypto verification, and cross-system compatibility—while adding a layer of governance-aware flexibility. (If you’ve read our technical foundations overview, you know verifiable credentials for minors have to walk a tightrope between autonomy and protection.) Age-graded DIDs make that balance work in practice by treating cryptographic control as something that evolves with development, rather than just locking it in at issuance.</p>
+<section id="state-transition-algorithms-for-developmental-milestones" class="level3">
+<h3 class="anchored" data-anchor-id="state-transition-algorithms-for-developmental-milestones">State-Transition Algorithms for Developmental Milestones</h3>
+<p>So, how does the system actually know when to move a kid from one stage to the next? That’s where the state-transition algorithm comes in. Instead of leaning on subjective judgments or paperwork-heavy approvals, it runs on deterministic, verifiable inputs. You’re usually looking at: - <strong>Time-based triggers:</strong> Crypto proofs showing how much time has passed since birth registration. - <strong>Event-based triggers:</strong> Sector-specific credentials dropping in (like primary school completion records or adolescent vaccination cards). - <strong>Legal capacity attestations:</strong> Government-verified proofs of age or emancipation status.</p>
+<p>Under the hood, it runs as a finite state machine. Every state maps to a specific set of crypto parameters, data release rules, and guardian-to-minor custody ratios. The system only flips to the next stage when the evaluation engine sees enough verified evidence to justify it. And here’s the important part: it doesn’t need biometric scans or invasive demographic profiling. Privacy stays intact because it leans on zero-knowledge proofs, time-locked commitments, or verified credential chains.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">stateDiagram-v2
+    [*] --&gt; Infant: Birth Registration + CRVS Credential
+    Infant --&gt; Child: Verified School Enrollment + Age Proof (6-11)
+    Child --&gt; Adolescent: Health/Education Milestones + Age Proof (12-16)
+    Adolescent --&gt; PreAdult: Secondary Completion + Age Proof (17)
+    PreAdult --&gt; Adult: Majority Attestation + ZK Proof of 18+
+    Adult --&gt; [*]
+    
+    note right of Infant
+        Guardian control: 90%
+        Minor control: 10%
+        Data release: Strict minimization
+    end note
+    
+    note right of Child
+        Guardian control: 70%
+        Minor control: 30%
+        Data release: Sector-specific
+    end note
+    
+    note right of Adolescent
+        Guardian control: 40%
+        Minor control: 60%
+        Data release: Selective disclosure
+    end note
+    
+    note right of PreAdult
+        Guardian control: 20%
+        Minor control: 80%
+        Data release: Near-full autonomy
+    end note
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>The state machine keeps everything auditable, and you can only reverse a transition with an explicit legal override (which stops manipulation in its tracks). Every state update gets logged as a signed delta to the DID Document, leaving a clean, immutable paper trail of how policies evolved—without ever leaking personal data. It’s a neat fit for all four interoperability layers, too: technical (DID resolution), semantic (W3C VC data model), organizational (cross-sector credential sharing), and policy (child rights compliance).</p>
+</section>
+<section id="incremental-guardian-to-self-custody-handoffs" class="level3">
+<h3 class="anchored" data-anchor-id="incremental-guardian-to-self-custody-handoffs">Incremental Guardian-to-Self Custody Handoffs</h3>
+<p>Let’s talk about the trickiest part of minor digital identity: handing over control. Diving straight into a full handoff at eighteen is risky. It ignores the fact that digital literacy and decision-making skills don’t just magically appear overnight. Age-graded DID methods solve this by using incremental custody handoffs, powered by threshold cryptography and multi-party computation (MPC) patterns.</p>
+<p>In practice, you register multiple verification methods with weighted signing thresholds. Right at birth, the guardian’s key might carry a heavy weight (say, 90%), while the minor’s key sits at a light 10%. As the kid moves through developmental stages, the policy engine automatically shifts those weights based on a set schedule or verified milestones. The handoff happens cryptographically, not administratively. That means no manual key rotations, no registry meddling, and absolutely zero exposure of private keys.</p>
+<p>This lines up nicely with the distributed key generation and secure signature aggregation techniques we’ve talked about for guardian co-signing. Thanks to threshold signatures, no single party can unilaterally mess with the identity, even while the transition is underway. The minor’s wallet slowly takes the wheel for everyday verifications (like accessing age-restricted services or showing off school credentials), while the guardian keeps a veto button for the heavy stuff—health data sharing, financial enrollment, and so on—until legal majority kicks in.</p>
+<p>The handoff algorithm basically runs in three phases: 1. <strong>Provisioning:</strong> You start with initial key generation via MPC, registering both guardian and minor keys in the DID Document with stage-specific weights. 2. <strong>Evaluation:</strong> The system continuously (or periodically) checks milestone credentials and time-locked proofs. The policy engine updates the active verification method set and tweaks the signing thresholds accordingly. 3. <strong>Transition:</strong> Cryptographic weight redistribution happens atomically. The DID Document gets a signed delta update, and the wallet runtime enforces the new control parameters.</p>
+<p>Breaking it down like this wipes out that jarring “cliff-edge” transition problem while keeping you strictly compliant with data protection rules. Plus, it takes the pressure off guardians who’d otherwise be constantly dragged into every verification, which seriously cuts down administrative overhead for government portals.</p>
+</section>
+</section>
+<section id="compliance-with-emerging-youth-data-protection-frameworks" class="level2">
+<h2 class="anchored" data-anchor-id="compliance-with-emerging-youth-data-protection-frameworks">Compliance with Emerging Youth Data Protection Frameworks</h2>
+<p>You can’t really design digital identity for minors in a regulatory vacuum. Age-graded DID methods are built from the ground up to play nice with emerging youth data protection frameworks—think UN Guidelines on Data Protection for Children, the EU’s GDPR-K, COPPA, and various regional child rights directives. Despite their differences, they all lean on three non-negotiable principles: privacy by design, data minimization, and consent that matches capacity.</p>
+<p><strong>Privacy by Design</strong> is practically wired into the state-transition architecture. Since crypto control parameters auto-adjust based on verified milestones, you don’t need to store or process continuous demographic surveillance. The system isn’t tracking a kid’s location, behavior, or biometric traits. It just checks discrete, purpose-bound credentials and applies deterministic rules. That lines up perfectly with UNICEF’s stance: collect kids’ data only when it’s absolutely necessary, and keep it only as long as it takes to deliver the service.</p>
+<p><strong>Data Minimization</strong> gets enforced through selective disclosure and zero-knowledge proofs. (We’ve covered this in our cryptographic age-proofs guide, but the gist is that minors can prove they’ve hit an age threshold without actually handing over their exact birth date.) Age-graded DIDs take this further by tying data release policies directly to developmental states. Picture a health verifier asking for vaccination records for a primary schooler—they only get the relevant credential subset. Meanwhile, a teen requesting reproductive health services can show a mature-capacity attestation without blowing their guardian’s contact info. The policy engine checks the request against the active state and spits out the bare minimum proof needed.</p>
+<p><strong>Capacity-Proportionate Consent</strong> comes to life through that incremental custody handoff we talked about. Younger kids operate under guardian-directed consent with tight data boundaries. Teens get partial autonomy for age-appropriate services, while veto mechanisms stay locked for high-risk moves. It’s a direct reflection of developmental psychology, which tells us decision-making capacity creeps in gradually and should be mirrored in digital governance. Runtime verification and spec-driven security keep policy evaluations auditable and tamper-resistant, giving government agencies the compliance assurance they need without trampling on child privacy.</p>
+</section>
+<section id="implementation-patterns-secure-automated-privilege-escalation" class="level2">
+<h2 class="anchored" data-anchor-id="implementation-patterns-secure-automated-privilege-escalation">Implementation Patterns: Secure Automated Privilege Escalation</h2>
+<p>Moving age-graded DID methods from theory to production takes some serious implementation patterns. You need systems that handle privilege escalation securely, run efficiently, and don’t fall apart when the internet goes down. Below, I’ll walk through a concrete example of how a government health portal can verify a minor’s eligibility for adolescent services—without leaking sensitive demographic data or forcing a manual guardian approval.</p>
+<section id="pattern-context-aware-credential-release-with-state-evaluation" class="level3">
+<h3 class="anchored" data-anchor-id="pattern-context-aware-credential-release-with-state-evaluation">Pattern: Context-Aware Credential Release with State Evaluation</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pseudocode: Policy Evaluation Engine for Age-Graded DID</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evaluate_minor_access(did_document, request_context, milestone_credentials):</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Evaluates access rights based on current developmental state.</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns: (allowed: bool, disclosure_scope: str, guardian_veto_required: bool)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    current_state <span class="op">=</span> did_document.get_active_state()</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    age_proof <span class="op">=</span> verify_zk_age_range(milestone_credentials, min_age<span class="op">=</span><span class="dv">12</span>, max_age<span class="op">=</span><span class="dv">17</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> age_proof:</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">False</span>, <span class="st">"none"</span>, <span class="va">False</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># State-transition algorithm evaluation</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> current_state <span class="kw">in</span> [<span class="st">"Infant"</span>, <span class="st">"Child"</span>] <span class="kw">and</span> request_context.service <span class="op">==</span> <span class="st">"adolescent_health"</span>:</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">False</span>, <span class="st">"none"</span>, <span class="va">True</span>  <span class="co"># Guardian veto required</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> current_state <span class="kw">in</span> [<span class="st">"Adolescent"</span>, <span class="st">"PreAdult"</span>]:</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Automated privilege escalation based on verified milestone</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        disclosure_scope <span class="op">=</span> evaluate_selective_disclosure(request_context, current_state)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">True</span>, disclosure_scope, <span class="va">False</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">False</span>, <span class="st">"none"</span>, <span class="va">True</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This pattern really highlights three critical features: 1. <strong>Zero-Knowledge Age Verification:</strong> The system confirms the minor falls in the right age bracket without pulling exact birth dates or processing biometric templates. It keeps in line with our biometric template protection strategies, meaning immutable traits never get stored or transmitted. 2. <strong>Deterministic State Evaluation:</strong> The policy engine checks the active DID state against the requested service. If the kid’s in an adolescent state and asks for age-appropriate health services, the system auto-grants access with a scoped disclosure policy. No manual approval queue gets triggered. 3. <strong>Guardian Veto Preservation:</strong> For high-sensitivity services or younger developmental stages, the system flags a veto requirement. The guardian’s wallet can intercept the request, review what’s being disclosed, and approve or deny it via a co-signing protocol. It keeps protective oversight in place while cutting the friction for everyday, age-appropriate services.</p>
+<p>In low-resource areas, you’d pair this pattern with edge wallet architectures and offline-first sync mechanisms. (We’ve touched on CRDT-based wallet sync before, but the idea is that kids and guardians can keep operating even when connectivity is spotty.) The policy engine caches state transitions and milestone credentials locally, then pushes delta updates once the connection comes back. You get service continuity without messing with cryptographic integrity or your compliance stance.</p>
+<p>Optimizing the verifier side is just as crucial. Government endpoints need to resolve DIDs, evaluate policies, and validate proofs in under a second if they want to handle high-volume service delivery. You can cut processing overhead (without breaking privacy guarantees) by using DNS-based DID resolution, edge caching for status lists, and parallel verification pipelines. Age-graded DIDs play nicely with all of this, since the state machine evaluations are lightweight and run deterministically.</p>
+</section>
+</section>
+<section id="interoperability-across-government-sectors" class="level2">
+<h2 class="anchored" data-anchor-id="interoperability-across-government-sectors">Interoperability Across Government Sectors</h2>
+<p>Age-graded DID methods aren’t just isolated tech experiments. They’re built to weave seamlessly across different government service domains. You hit interoperability by aligning with those four standard layers:</p>
+<p><strong>Technical Interoperability:</strong> It’s built on W3C Verifiable Credentials, DIDComm messaging, and OID4VC authorization flows. The DID Document plays nice with standard verification method types, and state transitions get logged as cryptographically signed deltas. Government-anchored DID methods give you a trusted resolution layer without leaning on permissionless networks.</p>
+<p><strong>Semantic Interoperability:</strong> Credential schemas stick to JSON-LD standards, with sector-specific extensions where needed. Birth registration credentials hook into CRVS systems, health credentials align with HL7 FHIR profiles, education credentials map to national qualification frameworks, and social protection credentials plug into welfare registry schemas. Thanks to selective disclosure, each sector only gets the exact attributes it needs to do its job.</p>
+<p><strong>Organizational Interoperability:</strong> Cross-ministry data sharing agreements get formalized through policy engines and decentralized enforcement points. Instead of building messy point-to-point integrations, ministries just subscribe to a shared credential verification infrastructure. Age-graded state evaluations give everyone a common governance language, which seriously cuts down coordination overhead and wipes out redundant consent workflows.</p>
+<p><strong>Policy Interoperability:</strong> Child rights frameworks, data protection mandates, and sector-specific regulations get baked straight into the policy evaluation engine. That means technical implementations auto-comply with legal thresholds, capacity requirements, and data retention limits. The system also supports audit trails for compliance reporting—without ever exposing personal data—which lines up perfectly with UN recommendations for transparent, accountable digital governance.</p>
+<p>Getting multi-sector interoperability right is huge for delivering continuous service journeys. A kid’s digital identity should glide smoothly from prenatal health tracking to birth registration, onto primary education enrollment, adolescent health services, and eventually labor market integration. Age-graded DIDs provide the cryptographic scaffolding to support that entire continuum—no system rebuilds or clunky data migrations required at every turn.</p>
+</section>
+<section id="actionable-takeaways-for-policy-and-implementation" class="level2">
+<h2 class="anchored" data-anchor-id="actionable-takeaways-for-policy-and-implementation">Actionable Takeaways for Policy and Implementation</h2>
+<p>Moving age-graded DID methods from architectural concept to production reality takes coordinated effort across policy, technical, and operational teams. Below, I’ve laid out the priority interventions for government officials, UN programme specialists, and ICT4D practitioners:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 27%">
+<col style="width: 23%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Policy Action</th>
+<th>Technical Mechanism</th>
+<th>Expected Outcome</th>
+<th>Compliance Alignment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Define developmental stage thresholds aligned with national law</td>
+<td>Finite state machine with deterministic milestone triggers</td>
+<td>Eliminates binary age cliffs; enables gradual autonomy</td>
+<td>UN Guidelines on Data Protection for Children, GDPR-K</td>
+</tr>
+<tr class="even">
+<td>Mandate zero-knowledge age verification for service access</td>
+<td>BBS+ signatures, range proofs, time-locked commitments</td>
+<td>Prevents demographic overexposure; reduces tracking risks</td>
+<td>Data minimization, privacy by design</td>
+</tr>
+<tr class="odd">
+<td>Standardize incremental custody handoff protocols</td>
+<td>Threshold cryptography, MPC co-signing, policy-weighted keys</td>
+<td>Smooth guardian-to-minor control transfer; reduces administrative overhead</td>
+<td>Capacity-proportionate consent, child rights</td>
+</tr>
+<tr class="even">
+<td>Deploy edge-compatible policy evaluation engines</td>
+<td>Offline-first state machines, CRDT sync, verifier-side caching</td>
+<td>Ensures service continuity in low-connectivity settings</td>
+<td>Equitable access, ICT4D resilience</td>
+</tr>
+<tr class="odd">
+<td>Establish cross-sector credential schema registries</td>
+<td>JSON-LD semantic alignment, W3C VC data model, OID4VC flows</td>
+<td>Enables seamless health-education-CRVS-social protection integration</td>
+<td>Interoperability layers, government efficiency</td>
+</tr>
+</tbody>
+</table>
+<p>These interventions really do feed into each other. Policy definitions set the legal boundaries for state transitions. Technical mechanisms put those boundaries into practice without sacrificing privacy. Edge deployment strategies keep things inclusive, even in resource-constrained areas. And semantic standardization stops ministries from fragmenting into silos. Put together, they sketch out a coherent implementation pathway that balances innovation with accountability.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Age-graded DID methods are genuinely shifting how governments think about digital identity for minors. By swapping out static, one-size-fits-all architectures for dynamic crypto controls tailored to kids, public institutions can roll out services that actually respect developmental reality, bake in privacy by design, and scale efficiently across sectors. Tying together state-transition algorithms, incremental custody handoffs, and zero-knowledge verification means minors earn appropriate autonomy as they grow up, while guardians and authorities keep the oversight needed for safety and compliance. As we keep refining these systems through open standards, interoperable frameworks, and rights-respecting cryptography, we’re inching closer to a future where a child’s digital identity actually grows alongside them—securely, transparently, and fairly. The next wave of government services won’t just tolerate kids; it’ll be engineered to empower them from birth right through adulthood. I’m pretty confident age-graded identity architectures will become the global standard for child-centric digital governance within this decade.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/merlos\.github\.io\/dvc4c\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
